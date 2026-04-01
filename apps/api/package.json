@@ -19,7 +19,8 @@
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "migration:create": "mikro-orm migration:create",
     "migration:up": "mikro-orm migration:up",
-    "migration:down": "mikro-orm migration:down"
+    "migration:down": "mikro-orm migration:down",
+    "seed": "tsx src/seed.ts"
   },
   "dependencies": {
     "@mikro-orm/core": "^7.0.8",
@@ -60,6 +61,7 @@
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.3",
     "unplugin-swc": "^1.5.9",
     "vitest": "^4.1.2"
