@@ -1,26 +1,24 @@
 'use client';
 
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   getMessageControllerFindAllQueryKey,
   messageControllerFindAll,
+  useMessageControllerDelete,
+  useMessageControllerUpdate,
 } from '@/api/messages/messages';
-import type { MessageResponseDto } from '@/api/model';
 
+import { ComposeForm } from './compose-form';
 import type { Filters } from './filter-bar';
 import { FilterBar } from './filter-bar';
 import { MessageCard } from './message-card';
 
 const PAGE_SIZE = 20;
 
-interface MessageFeedProps {
-  onEdit?: (message: MessageResponseDto) => void;
-  onDelete?: (message: MessageResponseDto) => void;
-}
-
-export function MessageFeed({ onEdit, onDelete }: MessageFeedProps) {
+export function MessageFeed() {
+  const queryClient = useQueryClient();
   const [filters, setFilters] = useState<Filters>({});
   const sentinelRef = useRef<HTMLDivElement>(null);
 
@@ -34,8 +32,22 @@ export function MessageFeed({ onEdit, onDelete }: MessageFeedProps) {
           limit: PAGE_SIZE,
         }),
       initialPageParam: undefined as string | undefined,
-      getNextPageParam: (lastPage) => (lastPage.hasMore ? (lastPage.nextCursor ?? undefined) : undefined),
+      getNextPageParam: (lastPage) =>
+        lastPage.hasMore ? (lastPage.nextCursor ?? undefined) : undefined,
     });
+
+  const invalidate = useCallback(
+    () => queryClient.invalidateQueries({ queryKey: getMessageControllerFindAllQueryKey() }),
+    [queryClient],
+  );
+
+  const updateMutation = useMessageControllerUpdate({
+    mutation: { onSuccess: invalidate },
+  });
+
+  const deleteMutation = useMessageControllerDelete({
+    mutation: { onSuccess: invalidate },
+  });
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -59,15 +71,13 @@ export function MessageFeed({ onEdit, onDelete }: MessageFeedProps) {
 
   return (
     <div className="space-y-4">
+      <ComposeForm />
+
       <FilterBar filters={filters} onChange={setFilters} />
 
-      {isLoading && (
-        <p className="py-8 text-center text-sm text-gray-500">Loading messages…</p>
-      )}
+      {isLoading && <p className="py-8 text-center text-sm text-gray-500">Loading messages…</p>}
 
-      {isError && (
-        <p className="py-8 text-center text-sm text-red-500">Failed to load messages.</p>
-      )}
+      {isError && <p className="py-8 text-center text-sm text-red-500">Failed to load messages.</p>}
 
       {!isLoading && !isError && messages.length === 0 && (
         <p className="py-8 text-center text-sm text-gray-500">
@@ -81,8 +91,10 @@ export function MessageFeed({ onEdit, onDelete }: MessageFeedProps) {
             <MessageCard
               key={message.id}
               message={message}
-              onEdit={onEdit}
-              onDelete={onDelete}
+              onSaveEdit={(id, content) => updateMutation.mutate({ id, data: { content } })}
+              isSaving={updateMutation.isPending}
+              onDelete={(id) => deleteMutation.mutate({ id })}
+              isDeleting={deleteMutation.isPending}
             />
           ))}
         </div>
