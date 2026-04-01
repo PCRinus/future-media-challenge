@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "pnpm -r run test",
     "dev": "docker compose up",
     "dev:watch": "docker compose watch",
     "dev:build": "docker compose up --build",
