@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "docker compose up",
+    "dev:build": "docker compose up --build",
     "generate": "pnpm --filter api generate:openapi && pnpm --filter web generate:client",
     "lint": "pnpm -r run lint",
     "format": "prettier --write .",
