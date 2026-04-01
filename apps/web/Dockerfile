@@ -15,7 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
 COPY . .
 WORKDIR /app/apps/web
-CMD ["pnpm", "dev", "--turbopack"]
+CMD ["pnpm", "dev", "--turbopack", "--hostname", "0.0.0.0"]
 
 # ---- Build ----
 FROM base AS build

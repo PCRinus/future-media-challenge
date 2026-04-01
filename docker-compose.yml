@@ -71,11 +71,11 @@ services:
       - "3000:3000"
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:3167
+      WATCHPACK_POLLING: "true"
     volumes:
       - .:/app
       - /app/node_modules
       - /app/apps/web/node_modules
-      - /app/apps/web/.next
     depends_on:
       - api
     develop:
