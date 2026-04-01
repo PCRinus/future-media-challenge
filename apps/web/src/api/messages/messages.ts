@@ -29,43 +29,19 @@ import type {
   UpdateMessageDto,
 } from '../model';
 
-export type messageControllerFindAllResponse200 = {
-  data: PaginatedMessagesResponseDto;
-  status: 200;
-};
+import { fetchInstance } from '../../lib/api-client';
 
-export type messageControllerFindAllResponseSuccess = messageControllerFindAllResponse200 & {
-  headers: Headers;
-};
-export type messageControllerFindAllResponse = messageControllerFindAllResponseSuccess;
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export const getMessageControllerFindAllUrl = (params?: MessageControllerFindAllParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString());
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/messages?${stringifiedParams}` : `/messages`;
-};
-
-export const messageControllerFindAll = async (
+export const messageControllerFindAll = (
   params?: MessageControllerFindAllParams,
-  options?: RequestInit,
-): Promise<messageControllerFindAllResponse> => {
-  const res = await fetch(getMessageControllerFindAllUrl(params), {
-    ...options,
-    method: 'GET',
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: messageControllerFindAllResponse['data'] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as messageControllerFindAllResponse;
+  options?: SecondParameter<typeof fetchInstance>,
+  signal?: AbortSignal,
+) => {
+  return fetchInstance<PaginatedMessagesResponseDto>(
+    { url: `/messages`, method: 'GET', params, signal },
+    options,
+  );
 };
 
 export const getMessageControllerFindAllQueryKey = (params?: MessageControllerFindAllParams) => {
@@ -81,16 +57,16 @@ export const getMessageControllerFindAllQueryOptions = <
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof messageControllerFindAll>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
 ) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getMessageControllerFindAllQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof messageControllerFindAll>>> = ({
     signal,
-  }) => messageControllerFindAll(params, { signal, ...fetchOptions });
+  }) => messageControllerFindAll(params, requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof messageControllerFindAll>>,
@@ -121,7 +97,7 @@ export function useMessageControllerFindAll<
         >,
         'initialData'
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -142,7 +118,7 @@ export function useMessageControllerFindAll<
         >,
         'initialData'
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -155,7 +131,7 @@ export function useMessageControllerFindAll<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof messageControllerFindAll>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -169,7 +145,7 @@ export function useMessageControllerFindAll<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof messageControllerFindAll>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -182,35 +158,21 @@ export function useMessageControllerFindAll<
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
-export type messageControllerCreateResponse201 = {
-  data: MessageResponseDto;
-  status: 201;
-};
-
-export type messageControllerCreateResponseSuccess = messageControllerCreateResponse201 & {
-  headers: Headers;
-};
-export type messageControllerCreateResponse = messageControllerCreateResponseSuccess;
-
-export const getMessageControllerCreateUrl = () => {
-  return `/messages`;
-};
-
-export const messageControllerCreate = async (
+export const messageControllerCreate = (
   createMessageDto: CreateMessageDto,
-  options?: RequestInit,
-): Promise<messageControllerCreateResponse> => {
-  const res = await fetch(getMessageControllerCreateUrl(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createMessageDto),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: messageControllerCreateResponse['data'] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as messageControllerCreateResponse;
+  options?: SecondParameter<typeof fetchInstance>,
+  signal?: AbortSignal,
+) => {
+  return fetchInstance<MessageResponseDto>(
+    {
+      url: `/messages`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createMessageDto,
+      signal,
+    },
+    options,
+  );
 };
 
 export const getMessageControllerCreateMutationOptions = <
@@ -223,7 +185,7 @@ export const getMessageControllerCreateMutationOptions = <
     { data: CreateMessageDto },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof fetchInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof messageControllerCreate>>,
   TError,
@@ -231,11 +193,11 @@ export const getMessageControllerCreateMutationOptions = <
   TContext
 > => {
   const mutationKey = ['messageControllerCreate'];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof messageControllerCreate>>,
@@ -243,7 +205,7 @@ export const getMessageControllerCreateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return messageControllerCreate(data, fetchOptions);
+    return messageControllerCreate(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -263,7 +225,7 @@ export const useMessageControllerCreate = <TError = unknown, TContext = unknown>
       { data: CreateMessageDto },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -274,36 +236,22 @@ export const useMessageControllerCreate = <TError = unknown, TContext = unknown>
 > => {
   return useMutation(getMessageControllerCreateMutationOptions(options), queryClient);
 };
-export type messageControllerUpdateResponse200 = {
-  data: MessageResponseDto;
-  status: 200;
-};
-
-export type messageControllerUpdateResponseSuccess = messageControllerUpdateResponse200 & {
-  headers: Headers;
-};
-export type messageControllerUpdateResponse = messageControllerUpdateResponseSuccess;
-
-export const getMessageControllerUpdateUrl = (id: string) => {
-  return `/messages/${id}`;
-};
-
-export const messageControllerUpdate = async (
+export const messageControllerUpdate = (
   id: string,
   updateMessageDto: UpdateMessageDto,
-  options?: RequestInit,
-): Promise<messageControllerUpdateResponse> => {
-  const res = await fetch(getMessageControllerUpdateUrl(id), {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(updateMessageDto),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: messageControllerUpdateResponse['data'] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as messageControllerUpdateResponse;
+  options?: SecondParameter<typeof fetchInstance>,
+  signal?: AbortSignal,
+) => {
+  return fetchInstance<MessageResponseDto>(
+    {
+      url: `/messages/${id}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateMessageDto,
+      signal,
+    },
+    options,
+  );
 };
 
 export const getMessageControllerUpdateMutationOptions = <
@@ -316,7 +264,7 @@ export const getMessageControllerUpdateMutationOptions = <
     { id: string; data: UpdateMessageDto },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof fetchInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof messageControllerUpdate>>,
   TError,
@@ -324,11 +272,11 @@ export const getMessageControllerUpdateMutationOptions = <
   TContext
 > => {
   const mutationKey = ['messageControllerUpdate'];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof messageControllerUpdate>>,
@@ -336,7 +284,7 @@ export const getMessageControllerUpdateMutationOptions = <
   > = (props) => {
     const { id, data } = props ?? {};
 
-    return messageControllerUpdate(id, data, fetchOptions);
+    return messageControllerUpdate(id, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -356,7 +304,7 @@ export const useMessageControllerUpdate = <TError = unknown, TContext = unknown>
       { id: string; data: UpdateMessageDto },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -367,33 +315,12 @@ export const useMessageControllerUpdate = <TError = unknown, TContext = unknown>
 > => {
   return useMutation(getMessageControllerUpdateMutationOptions(options), queryClient);
 };
-export type messageControllerDeleteResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type messageControllerDeleteResponseSuccess = messageControllerDeleteResponse204 & {
-  headers: Headers;
-};
-export type messageControllerDeleteResponse = messageControllerDeleteResponseSuccess;
-
-export const getMessageControllerDeleteUrl = (id: string) => {
-  return `/messages/${id}`;
-};
-
-export const messageControllerDelete = async (
+export const messageControllerDelete = (
   id: string,
-  options?: RequestInit,
-): Promise<messageControllerDeleteResponse> => {
-  const res = await fetch(getMessageControllerDeleteUrl(id), {
-    ...options,
-    method: 'DELETE',
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: messageControllerDeleteResponse['data'] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as messageControllerDeleteResponse;
+  options?: SecondParameter<typeof fetchInstance>,
+  signal?: AbortSignal,
+) => {
+  return fetchInstance<void>({ url: `/messages/${id}`, method: 'DELETE', signal }, options);
 };
 
 export const getMessageControllerDeleteMutationOptions = <
@@ -406,7 +333,7 @@ export const getMessageControllerDeleteMutationOptions = <
     { id: string },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof fetchInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof messageControllerDelete>>,
   TError,
@@ -414,11 +341,11 @@ export const getMessageControllerDeleteMutationOptions = <
   TContext
 > => {
   const mutationKey = ['messageControllerDelete'];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof messageControllerDelete>>,
@@ -426,7 +353,7 @@ export const getMessageControllerDeleteMutationOptions = <
   > = (props) => {
     const { id } = props ?? {};
 
-    return messageControllerDelete(id, fetchOptions);
+    return messageControllerDelete(id, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -446,7 +373,7 @@ export const useMessageControllerDelete = <TError = unknown, TContext = unknown>
       { id: string },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<

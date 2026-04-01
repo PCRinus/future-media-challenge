@@ -8,8 +8,22 @@ export default defineConfig({
       schemas: './src/api/model',
       client: 'react-query',
       mode: 'tags-split',
-      clean: true,
+      clean: [
+        './src/api/model',
+        './src/api/auth',
+        './src/api/health',
+        './src/api/messages',
+        './src/api/tags',
+        './src/api/users',
+      ],
       prettier: true,
+      override: {
+        mutator: {
+          path: './src/lib/api-client.ts',
+          name: 'fetchInstance',
+        },
+      },
+      httpClient: 'axios',
     },
   },
 });

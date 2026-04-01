@@ -15,35 +15,25 @@ import type {
 
 import type { AuthResponseDto, LoginDto, RegisterDto } from '../model';
 
-export type authControllerRegisterResponse201 = {
-  data: AuthResponseDto;
-  status: 201;
-};
+import { fetchInstance } from '../../lib/api-client';
 
-export type authControllerRegisterResponseSuccess = authControllerRegisterResponse201 & {
-  headers: Headers;
-};
-export type authControllerRegisterResponse = authControllerRegisterResponseSuccess;
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export const getAuthControllerRegisterUrl = () => {
-  return `/auth/register`;
-};
-
-export const authControllerRegister = async (
+export const authControllerRegister = (
   registerDto: RegisterDto,
-  options?: RequestInit,
-): Promise<authControllerRegisterResponse> => {
-  const res = await fetch(getAuthControllerRegisterUrl(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(registerDto),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: authControllerRegisterResponse['data'] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as authControllerRegisterResponse;
+  options?: SecondParameter<typeof fetchInstance>,
+  signal?: AbortSignal,
+) => {
+  return fetchInstance<AuthResponseDto>(
+    {
+      url: `/auth/register`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: registerDto,
+      signal,
+    },
+    options,
+  );
 };
 
 export const getAuthControllerRegisterMutationOptions = <
@@ -56,7 +46,7 @@ export const getAuthControllerRegisterMutationOptions = <
     { data: RegisterDto },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof fetchInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authControllerRegister>>,
   TError,
@@ -64,11 +54,11 @@ export const getAuthControllerRegisterMutationOptions = <
   TContext
 > => {
   const mutationKey = ['authControllerRegister'];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authControllerRegister>>,
@@ -76,7 +66,7 @@ export const getAuthControllerRegisterMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return authControllerRegister(data, fetchOptions);
+    return authControllerRegister(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -96,7 +86,7 @@ export const useAuthControllerRegister = <TError = unknown, TContext = unknown>(
       { data: RegisterDto },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
@@ -107,35 +97,21 @@ export const useAuthControllerRegister = <TError = unknown, TContext = unknown>(
 > => {
   return useMutation(getAuthControllerRegisterMutationOptions(options), queryClient);
 };
-export type authControllerLoginResponse200 = {
-  data: AuthResponseDto;
-  status: 200;
-};
-
-export type authControllerLoginResponseSuccess = authControllerLoginResponse200 & {
-  headers: Headers;
-};
-export type authControllerLoginResponse = authControllerLoginResponseSuccess;
-
-export const getAuthControllerLoginUrl = () => {
-  return `/auth/login`;
-};
-
-export const authControllerLogin = async (
+export const authControllerLogin = (
   loginDto: LoginDto,
-  options?: RequestInit,
-): Promise<authControllerLoginResponse> => {
-  const res = await fetch(getAuthControllerLoginUrl(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(loginDto),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: authControllerLoginResponse['data'] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as authControllerLoginResponse;
+  options?: SecondParameter<typeof fetchInstance>,
+  signal?: AbortSignal,
+) => {
+  return fetchInstance<AuthResponseDto>(
+    {
+      url: `/auth/login`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: loginDto,
+      signal,
+    },
+    options,
+  );
 };
 
 export const getAuthControllerLoginMutationOptions = <
@@ -148,7 +124,7 @@ export const getAuthControllerLoginMutationOptions = <
     { data: LoginDto },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof fetchInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof authControllerLogin>>,
   TError,
@@ -156,11 +132,11 @@ export const getAuthControllerLoginMutationOptions = <
   TContext
 > => {
   const mutationKey = ['authControllerLogin'];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof authControllerLogin>>,
@@ -168,7 +144,7 @@ export const getAuthControllerLoginMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return authControllerLogin(data, fetchOptions);
+    return authControllerLogin(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -188,7 +164,7 @@ export const useAuthControllerLogin = <TError = unknown, TContext = unknown>(
       { data: LoginDto },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<

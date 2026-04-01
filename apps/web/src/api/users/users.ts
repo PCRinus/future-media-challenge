@@ -20,46 +20,18 @@ import type {
 
 import type { UserResponseDto } from '../model';
 
+import { fetchInstance } from '../../lib/api-client';
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
 /**
  * @summary Get current authenticated user profile
  */
-export type userControllerMeResponse200 = {
-  data: UserResponseDto;
-  status: 200;
-};
-
-export type userControllerMeResponse401 = {
-  data: void;
-  status: 401;
-};
-
-export type userControllerMeResponseSuccess = userControllerMeResponse200 & {
-  headers: Headers;
-};
-export type userControllerMeResponseError = userControllerMeResponse401 & {
-  headers: Headers;
-};
-
-export type userControllerMeResponse =
-  | userControllerMeResponseSuccess
-  | userControllerMeResponseError;
-
-export const getUserControllerMeUrl = () => {
-  return `/users/me`;
-};
-
-export const userControllerMe = async (
-  options?: RequestInit,
-): Promise<userControllerMeResponse> => {
-  const res = await fetch(getUserControllerMeUrl(), {
-    ...options,
-    method: 'GET',
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: userControllerMeResponse['data'] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as userControllerMeResponse;
+export const userControllerMe = (
+  options?: SecondParameter<typeof fetchInstance>,
+  signal?: AbortSignal,
+) => {
+  return fetchInstance<UserResponseDto>({ url: `/users/me`, method: 'GET', signal }, options);
 };
 
 export const getUserControllerMeQueryKey = () => {
@@ -71,14 +43,14 @@ export const getUserControllerMeQueryOptions = <
   TError = void,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof userControllerMe>>, TError, TData>>;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof fetchInstance>;
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getUserControllerMeQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof userControllerMe>>> = ({ signal }) =>
-    userControllerMe({ signal, ...fetchOptions });
+    userControllerMe(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof userControllerMe>>,
@@ -104,7 +76,7 @@ export function useUserControllerMe<
         >,
         'initialData'
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -122,7 +94,7 @@ export function useUserControllerMe<
         >,
         'initialData'
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -132,7 +104,7 @@ export function useUserControllerMe<
 >(
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof userControllerMe>>, TError, TData>>;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -146,7 +118,7 @@ export function useUserControllerMe<
 >(
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof userControllerMe>>, TError, TData>>;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {

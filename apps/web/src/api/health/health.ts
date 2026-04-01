@@ -20,46 +20,18 @@ import type {
 
 import type { HealthResponseDto } from '../model';
 
+import { fetchInstance } from '../../lib/api-client';
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
 /**
  * @summary Health check
  */
-export type healthControllerCheckResponse200 = {
-  data: HealthResponseDto;
-  status: 200;
-};
-
-export type healthControllerCheckResponse503 = {
-  data: void;
-  status: 503;
-};
-
-export type healthControllerCheckResponseSuccess = healthControllerCheckResponse200 & {
-  headers: Headers;
-};
-export type healthControllerCheckResponseError = healthControllerCheckResponse503 & {
-  headers: Headers;
-};
-
-export type healthControllerCheckResponse =
-  | healthControllerCheckResponseSuccess
-  | healthControllerCheckResponseError;
-
-export const getHealthControllerCheckUrl = () => {
-  return `/health`;
-};
-
-export const healthControllerCheck = async (
-  options?: RequestInit,
-): Promise<healthControllerCheckResponse> => {
-  const res = await fetch(getHealthControllerCheckUrl(), {
-    ...options,
-    method: 'GET',
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: healthControllerCheckResponse['data'] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as healthControllerCheckResponse;
+export const healthControllerCheck = (
+  options?: SecondParameter<typeof fetchInstance>,
+  signal?: AbortSignal,
+) => {
+  return fetchInstance<HealthResponseDto>({ url: `/health`, method: 'GET', signal }, options);
 };
 
 export const getHealthControllerCheckQueryKey = () => {
@@ -73,14 +45,14 @@ export const getHealthControllerCheckQueryOptions = <
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof healthControllerCheck>>, TError, TData>
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof fetchInstance>;
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getHealthControllerCheckQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof healthControllerCheck>>> = ({ signal }) =>
-    healthControllerCheck({ signal, ...fetchOptions });
+    healthControllerCheck(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof healthControllerCheck>>,
@@ -110,7 +82,7 @@ export function useHealthControllerCheck<
         >,
         'initialData'
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -130,7 +102,7 @@ export function useHealthControllerCheck<
         >,
         'initialData'
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -142,7 +114,7 @@ export function useHealthControllerCheck<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof healthControllerCheck>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -158,7 +130,7 @@ export function useHealthControllerCheck<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof healthControllerCheck>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {

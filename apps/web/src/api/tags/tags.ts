@@ -23,32 +23,15 @@ import type {
 
 import type { CreateTagDto, TagResponseDto } from '../model';
 
-export type tagControllerFindAllResponse200 = {
-  data: TagResponseDto[];
-  status: 200;
-};
+import { fetchInstance } from '../../lib/api-client';
 
-export type tagControllerFindAllResponseSuccess = tagControllerFindAllResponse200 & {
-  headers: Headers;
-};
-export type tagControllerFindAllResponse = tagControllerFindAllResponseSuccess;
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export const getTagControllerFindAllUrl = () => {
-  return `/tags`;
-};
-
-export const tagControllerFindAll = async (
-  options?: RequestInit,
-): Promise<tagControllerFindAllResponse> => {
-  const res = await fetch(getTagControllerFindAllUrl(), {
-    ...options,
-    method: 'GET',
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: tagControllerFindAllResponse['data'] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as tagControllerFindAllResponse;
+export const tagControllerFindAll = (
+  options?: SecondParameter<typeof fetchInstance>,
+  signal?: AbortSignal,
+) => {
+  return fetchInstance<TagResponseDto[]>({ url: `/tags`, method: 'GET', signal }, options);
 };
 
 export const getTagControllerFindAllQueryKey = () => {
@@ -60,14 +43,14 @@ export const getTagControllerFindAllQueryOptions = <
   TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof tagControllerFindAll>>, TError, TData>>;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof fetchInstance>;
 }) => {
-  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getTagControllerFindAllQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof tagControllerFindAll>>> = ({ signal }) =>
-    tagControllerFindAll({ signal, ...fetchOptions });
+    tagControllerFindAll(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof tagControllerFindAll>>,
@@ -97,7 +80,7 @@ export function useTagControllerFindAll<
         >,
         'initialData'
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -117,7 +100,7 @@ export function useTagControllerFindAll<
         >,
         'initialData'
       >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -129,7 +112,7 @@ export function useTagControllerFindAll<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof tagControllerFindAll>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
@@ -142,7 +125,7 @@ export function useTagControllerFindAll<
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof tagControllerFindAll>>, TError, TData>
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -155,35 +138,21 @@ export function useTagControllerFindAll<
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
-export type tagControllerCreateResponse201 = {
-  data: TagResponseDto;
-  status: 201;
-};
-
-export type tagControllerCreateResponseSuccess = tagControllerCreateResponse201 & {
-  headers: Headers;
-};
-export type tagControllerCreateResponse = tagControllerCreateResponseSuccess;
-
-export const getTagControllerCreateUrl = () => {
-  return `/tags`;
-};
-
-export const tagControllerCreate = async (
+export const tagControllerCreate = (
   createTagDto: CreateTagDto,
-  options?: RequestInit,
-): Promise<tagControllerCreateResponse> => {
-  const res = await fetch(getTagControllerCreateUrl(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createTagDto),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: tagControllerCreateResponse['data'] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as tagControllerCreateResponse;
+  options?: SecondParameter<typeof fetchInstance>,
+  signal?: AbortSignal,
+) => {
+  return fetchInstance<TagResponseDto>(
+    {
+      url: `/tags`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createTagDto,
+      signal,
+    },
+    options,
+  );
 };
 
 export const getTagControllerCreateMutationOptions = <
@@ -196,7 +165,7 @@ export const getTagControllerCreateMutationOptions = <
     { data: CreateTagDto },
     TContext
   >;
-  fetch?: RequestInit;
+  request?: SecondParameter<typeof fetchInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof tagControllerCreate>>,
   TError,
@@ -204,11 +173,11 @@ export const getTagControllerCreateMutationOptions = <
   TContext
 > => {
   const mutationKey = ['tagControllerCreate'];
-  const { mutation: mutationOptions, fetch: fetchOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, fetch: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof tagControllerCreate>>,
@@ -216,7 +185,7 @@ export const getTagControllerCreateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return tagControllerCreate(data, fetchOptions);
+    return tagControllerCreate(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
@@ -236,7 +205,7 @@ export const useTagControllerCreate = <TError = unknown, TContext = unknown>(
       { data: CreateTagDto },
       TContext
     >;
-    fetch?: RequestInit;
+    request?: SecondParameter<typeof fetchInstance>;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
