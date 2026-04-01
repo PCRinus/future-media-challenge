@@ -18,11 +18,13 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query';
 
+import type { HealthResponseDto } from '../model';
+
 /**
  * @summary Health check
  */
 export type healthControllerCheckResponse200 = {
-  data: void;
+  data: HealthResponseDto;
   status: 200;
 };
 

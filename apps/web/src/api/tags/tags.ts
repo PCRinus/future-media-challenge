@@ -21,10 +21,10 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import type { CreateTagDto } from '../model';
+import type { CreateTagDto, TagResponseDto } from '../model';
 
 export type tagControllerFindAllResponse200 = {
-  data: void;
+  data: TagResponseDto[];
   status: 200;
 };
 
@@ -156,7 +156,7 @@ export function useTagControllerFindAll<
 }
 
 export type tagControllerCreateResponse201 = {
-  data: void;
+  data: TagResponseDto;
   status: 201;
 };
 

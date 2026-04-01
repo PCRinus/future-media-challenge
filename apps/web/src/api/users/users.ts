@@ -18,11 +18,13 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query';
 
+import type { UserResponseDto } from '../model';
+
 /**
  * @summary Get current authenticated user profile
  */
 export type userControllerMeResponse200 = {
-  data: void;
+  data: UserResponseDto;
   status: 200;
 };
 

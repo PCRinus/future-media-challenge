@@ -21,10 +21,16 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import type { CreateMessageDto, MessageControllerFindAllParams, UpdateMessageDto } from '../model';
+import type {
+  CreateMessageDto,
+  MessageControllerFindAllParams,
+  MessageResponseDto,
+  PaginatedMessagesResponseDto,
+  UpdateMessageDto,
+} from '../model';
 
 export type messageControllerFindAllResponse200 = {
-  data: void;
+  data: PaginatedMessagesResponseDto;
   status: 200;
 };
 
@@ -177,7 +183,7 @@ export function useMessageControllerFindAll<
 }
 
 export type messageControllerCreateResponse201 = {
-  data: void;
+  data: MessageResponseDto;
   status: 201;
 };
 
@@ -269,7 +275,7 @@ export const useMessageControllerCreate = <TError = unknown, TContext = unknown>
   return useMutation(getMessageControllerCreateMutationOptions(options), queryClient);
 };
 export type messageControllerUpdateResponse200 = {
-  data: void;
+  data: MessageResponseDto;
   status: 200;
 };
 
