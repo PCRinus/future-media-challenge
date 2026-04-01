@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
 import { writeFileSync } from 'fs';
 import { resolve } from 'path';
+
+import { AppModule } from './app.module';
 
 async function generate() {
   const app = await NestFactory.create(AppModule, { logger: false });

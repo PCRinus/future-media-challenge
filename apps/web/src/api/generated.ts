@@ -5,9 +5,6 @@
  * The API for the Future Media Challenge application
  * OpenAPI spec version: 1.0
  */
-import {
-  useQuery
-} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -17,112 +14,140 @@ import type {
   QueryKey,
   UndefinedInitialDataOptions,
   UseQueryOptions,
-  UseQueryResult
+  UseQueryResult,
 } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 export type appControllerGetHelloResponse200 = {
-  data: void
-  status: 200
-}
+  data: void;
+  status: 200;
+};
 
-export type appControllerGetHelloResponseSuccess = (appControllerGetHelloResponse200) & {
+export type appControllerGetHelloResponseSuccess = appControllerGetHelloResponse200 & {
   headers: Headers;
 };
-;
-
-export type appControllerGetHelloResponse = (appControllerGetHelloResponseSuccess)
+export type appControllerGetHelloResponse = appControllerGetHelloResponseSuccess;
 
 export const getAppControllerGetHelloUrl = () => {
+  return `/`;
+};
 
-
-
-
-  return `/`
-}
-
-export const appControllerGetHello = async ( options?: RequestInit): Promise<appControllerGetHelloResponse> => {
-
-  const res = await fetch(getAppControllerGetHelloUrl(),
-  {
+export const appControllerGetHello = async (
+  options?: RequestInit,
+): Promise<appControllerGetHelloResponse> => {
+  const res = await fetch(getAppControllerGetHelloUrl(), {
     ...options,
-    method: 'GET'
-
-
-  }
-)
+    method: 'GET',
+  });
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: appControllerGetHelloResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as appControllerGetHelloResponse
-}
-
-
-
-
+  const data: appControllerGetHelloResponse['data'] = body ? JSON.parse(body) : {};
+  return { data, status: res.status, headers: res.headers } as appControllerGetHelloResponse;
+};
 
 export const getAppControllerGetHelloQueryKey = () => {
-    return [
-    `/`
-    ] as const;
-    }
+  return [`/`] as const;
+};
 
+export const getAppControllerGetHelloQueryOptions = <
+  TData = Awaited<ReturnType<typeof appControllerGetHello>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHello>>, TError, TData>
+  >;
+  fetch?: RequestInit;
+}) => {
+  const { query: queryOptions, fetch: fetchOptions } = options ?? {};
 
-export const getAppControllerGetHelloQueryOptions = <TData = Awaited<ReturnType<typeof appControllerGetHello>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHello>>, TError, TData>>, fetch?: RequestInit}
-) => {
+  const queryKey = queryOptions?.queryKey ?? getAppControllerGetHelloQueryKey();
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof appControllerGetHello>>> = ({ signal }) =>
+    appControllerGetHello({ signal, ...fetchOptions });
 
-  const queryKey =  queryOptions?.queryKey ?? getAppControllerGetHelloQueryKey();
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof appControllerGetHello>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
+export type AppControllerGetHelloQueryResult = NonNullable<
+  Awaited<ReturnType<typeof appControllerGetHello>>
+>;
+export type AppControllerGetHelloQueryError = unknown;
 
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof appControllerGetHello>>> = ({ signal }) => appControllerGetHello({ signal, ...fetchOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHello>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type AppControllerGetHelloQueryResult = NonNullable<Awaited<ReturnType<typeof appControllerGetHello>>>
-export type AppControllerGetHelloQueryError = unknown
-
-
-export function useAppControllerGetHello<TData = Awaited<ReturnType<typeof appControllerGetHello>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHello>>, TError, TData>> & Pick<
+export function useAppControllerGetHello<
+  TData = Awaited<ReturnType<typeof appControllerGetHello>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHello>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof appControllerGetHello>>,
           TError,
           Awaited<ReturnType<typeof appControllerGetHello>>
-        > , 'initialData'
-      >, fetch?: RequestInit}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useAppControllerGetHello<TData = Awaited<ReturnType<typeof appControllerGetHello>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHello>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+    fetch?: RequestInit;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAppControllerGetHello<
+  TData = Awaited<ReturnType<typeof appControllerGetHello>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHello>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof appControllerGetHello>>,
           TError,
           Awaited<ReturnType<typeof appControllerGetHello>>
-        > , 'initialData'
-      >, fetch?: RequestInit}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useAppControllerGetHello<TData = Awaited<ReturnType<typeof appControllerGetHello>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHello>>, TError, TData>>, fetch?: RequestInit}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+    fetch?: RequestInit;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAppControllerGetHello<
+  TData = Awaited<ReturnType<typeof appControllerGetHello>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHello>>, TError, TData>
+    >;
+    fetch?: RequestInit;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export function useAppControllerGetHello<TData = Awaited<ReturnType<typeof appControllerGetHello>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHello>>, TError, TData>>, fetch?: RequestInit}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useAppControllerGetHello<
+  TData = Awaited<ReturnType<typeof appControllerGetHello>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHello>>, TError, TData>
+    >;
+    fetch?: RequestInit;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getAppControllerGetHelloQueryOptions(options);
 
-  const queryOptions = getAppControllerGetHelloQueryOptions(options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }

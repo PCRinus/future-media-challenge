@@ -5,5 +5,3 @@
  * The API for the Future Media Challenge application
  * OpenAPI spec version: 1.0
  */
-
-

@@ -57,14 +57,14 @@ pnpm --filter web dev & pnpm --filter api start:dev
 
 ## Common Commands
 
-| Command | Description |
-| --- | --- |
-| `pnpm install` | Install all dependencies |
+| Command                      | Description                 |
+| ---------------------------- | --------------------------- |
+| `pnpm install`               | Install all dependencies    |
 | `pnpm --filter web <script>` | Run a script in the web app |
-| `pnpm --filter api <script>` | Run a script in the API |
-| `pnpm --filter web build` | Build the frontend |
-| `pnpm --filter api build` | Build the backend |
-| `pnpm --filter api test` | Run API tests |
+| `pnpm --filter api <script>` | Run a script in the API     |
+| `pnpm --filter web build`    | Build the frontend          |
+| `pnpm --filter api build`    | Build the backend           |
+| `pnpm --filter api test`     | Run API tests               |
 
 ## Adding Shared Packages
 
