@@ -2,6 +2,7 @@
 
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 import {
   getMessageControllerFindAllQueryKey,
@@ -9,6 +10,7 @@ import {
   useMessageControllerDelete,
   useMessageControllerUpdate,
 } from '@/api/messages/messages';
+import { getErrorMessage } from '@/lib/get-error-message';
 
 import { ComposeForm } from './compose-form';
 import type { Filters } from './filter-bar';
@@ -42,11 +44,27 @@ export function MessageFeed() {
   );
 
   const updateMutation = useMessageControllerUpdate({
-    mutation: { onSuccess: invalidate },
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+        toast.success('Message updated');
+      },
+      onError: (err: unknown) => {
+        toast.error(getErrorMessage(err, 'Failed to update message'));
+      },
+    },
   });
 
   const deleteMutation = useMessageControllerDelete({
-    mutation: { onSuccess: invalidate },
+    mutation: {
+      onSuccess: () => {
+        invalidate();
+        toast.success('Message deleted');
+      },
+      onError: (err: unknown) => {
+        toast.error(getErrorMessage(err, 'Failed to delete message'));
+      },
+    },
   });
 
   const handleObserver = useCallback(

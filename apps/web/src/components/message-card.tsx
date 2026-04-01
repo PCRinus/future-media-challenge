@@ -70,6 +70,11 @@ export function MessageCard({ message, onSaveEdit, isSaving, onDelete, isDeletin
           <time className="text-gray-500" dateTime={message.createdAt} title={new Date(message.createdAt).toLocaleString()}>
             {formatRelativeTime(message.createdAt)}
           </time>
+          {message.updatedAt !== message.createdAt && (
+            <span className="text-gray-400" title={`Edited ${new Date(message.updatedAt).toLocaleString()}`}>
+              (edited)
+            </span>
+          )}
         </div>
 
         {isAuthor && !editing && !confirmDelete && (

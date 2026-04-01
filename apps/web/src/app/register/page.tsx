@@ -9,6 +9,7 @@ import { z } from 'zod/v4';
 
 import { useAuthControllerRegister } from '@/api/auth/auth';
 import { useAuth } from '@/contexts/auth-context';
+import { getErrorMessage } from '@/lib/get-error-message';
 
 const registerSchema = z.object({
   username: z.string().min(2, 'Username must be at least 2 characters'),
@@ -38,8 +39,7 @@ export default function RegisterPage() {
         router.push('/');
       },
       onError: (err: unknown) => {
-        const message = err instanceof Error ? err.message : 'Registration failed';
-        setError(message);
+        setError(getErrorMessage(err, 'Registration failed'));
       },
     },
   });

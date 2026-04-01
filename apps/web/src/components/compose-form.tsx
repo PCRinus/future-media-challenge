@@ -2,15 +2,16 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import { getMessageControllerFindAllQueryKey, useMessageControllerCreate } from '@/api/messages/messages';
 import { useTagControllerFindAll } from '@/api/tags/tags';
+import { getErrorMessage } from '@/lib/get-error-message';
 
 export function ComposeForm() {
   const queryClient = useQueryClient();
   const [content, setContent] = useState('');
   const [tagId, setTagId] = useState('');
-  const [error, setError] = useState('');
 
   const { data: tags } = useTagControllerFindAll();
 
@@ -18,11 +19,11 @@ export function ComposeForm() {
     mutation: {
       onSuccess: () => {
         setContent('');
-        setError('');
         queryClient.invalidateQueries({ queryKey: getMessageControllerFindAllQueryKey() });
+        toast.success('Message posted');
       },
       onError: (err: unknown) => {
-        setError(err instanceof Error ? err.message : 'Failed to post message');
+        toast.error(getErrorMessage(err, 'Failed to post message'));
       },
     },
   });
@@ -37,8 +38,6 @@ export function ComposeForm() {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">
-      {error && <div className="mb-3 rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</div>}
-
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}

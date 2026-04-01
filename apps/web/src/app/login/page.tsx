@@ -9,6 +9,7 @@ import { z } from 'zod/v4';
 
 import { useAuthControllerLogin } from '@/api/auth/auth';
 import { useAuth } from '@/contexts/auth-context';
+import { getErrorMessage } from '@/lib/get-error-message';
 
 const loginSchema = z.object({
   email: z.email('Invalid email address'),
@@ -37,8 +38,7 @@ export default function LoginPage() {
         router.push('/');
       },
       onError: (err: unknown) => {
-        const message = err instanceof Error ? err.message : 'Login failed';
-        setError(message);
+        setError(getErrorMessage(err, 'Login failed'));
       },
     },
   });
