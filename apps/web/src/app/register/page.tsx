@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod/v4';
 
 import { useAuthControllerRegister } from '@/api/auth/auth';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/contexts/auth-context';
 
 const registerSchema = z.object({
   username: z.string().min(2, 'Username must be at least 2 characters'),

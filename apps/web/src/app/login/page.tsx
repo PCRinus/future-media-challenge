@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod/v4';
 
 import { useAuthControllerLogin } from '@/api/auth/auth';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth } from '@/contexts/auth-context';
 
 const loginSchema = z.object({
   email: z.email('Invalid email address'),
