@@ -5,3 +5,11 @@
  * The API for the Future Media Challenge application
  * OpenAPI spec version: 1.0
  */
+
+export * from './authResponseDto';
+export * from './createMessageDto';
+export * from './createTagDto';
+export * from './loginDto';
+export * from './messageControllerFindAllParams';
+export * from './registerDto';
+export * from './updateMessageDto';
