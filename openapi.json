@@ -7,7 +7,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Current user profile"
+            "description": "Current user profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -92,7 +99,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Service is healthy"
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponseDto"
+                }
+              }
+            }
           },
           "503": {
             "description": "Service is unhealthy"
@@ -100,7 +114,7 @@
         },
         "summary": "Health check",
         "tags": [
-          "health"
+          "Health"
         ]
       }
     },
@@ -110,7 +124,17 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "List all tags"
+            "description": "List all tags",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TagResponseDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -132,7 +156,14 @@
         },
         "responses": {
           "201": {
-            "description": "Tag created"
+            "description": "Tag created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -209,7 +240,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Paginated list of messages"
+            "description": "Paginated list of messages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedMessagesResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -231,7 +269,14 @@
         },
         "responses": {
           "201": {
-            "description": "Message created"
+            "description": "Message created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -269,7 +314,14 @@
         },
         "responses": {
           "200": {
-            "description": "Message updated"
+            "description": "Message updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponseDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -319,6 +371,37 @@
   "servers": [],
   "components": {
     "schemas": {
+      "UserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "email",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "RegisterDto": {
         "type": "object",
         "properties": {
@@ -370,6 +453,44 @@
           "password"
         ]
       },
+      "HealthResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "ok"
+          },
+          "database": {
+            "type": "string",
+            "example": "connected"
+          }
+        },
+        "required": [
+          "status",
+          "database"
+        ]
+      },
+      "TagResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "createdAt"
+        ]
+      },
       "CreateTagDto": {
         "type": "object",
         "properties": {
@@ -380,6 +501,96 @@
         },
         "required": [
           "name"
+        ]
+      },
+      "MessageAuthorDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "username"
+        ]
+      },
+      "MessageTagDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "MessageResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 240
+          },
+          "author": {
+            "$ref": "#/components/schemas/MessageAuthorDto"
+          },
+          "tag": {
+            "$ref": "#/components/schemas/MessageTagDto"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "content",
+          "author",
+          "tag",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PaginatedMessagesResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageResponseDto"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          },
+          "hasMore": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor",
+          "hasMore"
         ]
       },
       "CreateMessageDto": {
