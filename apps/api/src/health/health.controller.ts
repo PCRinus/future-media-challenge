@@ -2,7 +2,7 @@ import { MikroORM } from '@mikro-orm/core';
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('health')
+@ApiTags('Health')
 @Controller('health')
 export class HealthController {
   constructor(private readonly orm: MikroORM) {}
