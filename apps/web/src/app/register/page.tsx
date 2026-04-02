@@ -1,13 +1,12 @@
 'use client';
 
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
+import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod/v4';
-
-import { Eye, EyeOff } from 'lucide-react';
 
 import { useAuthControllerRegister } from '@/api/auth/auth';
 import { Button } from '@/components/ui/button';
