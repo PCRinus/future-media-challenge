@@ -1,8 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { TagResponseDto } from '../../tag/dto/tag-response.dto';
-import { UserResponseDto } from '../../user/dto/user-response.dto';
-
 export class MessageAuthorDto {
   @ApiProperty({ format: 'uuid' })
   id!: string;
