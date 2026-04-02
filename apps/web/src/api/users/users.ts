@@ -18,11 +18,141 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import type { UserResponseDto } from '../model';
+import type { UserControllerSearchParams, UserResponseDto, UserSearchResultDto } from '../model';
 
 import { fetchInstance } from '../../lib/api-client';
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+/**
+ * @summary Search users by username
+ */
+export const userControllerSearch = (
+  params?: UserControllerSearchParams,
+  options?: SecondParameter<typeof fetchInstance>,
+  signal?: AbortSignal,
+) => {
+  return fetchInstance<UserSearchResultDto[]>(
+    { url: `/users/search`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getUserControllerSearchQueryKey = (params?: UserControllerSearchParams) => {
+  return [`/users/search`, ...(params ? [params] : [])] as const;
+};
+
+export const getUserControllerSearchQueryOptions = <
+  TData = Awaited<ReturnType<typeof userControllerSearch>>,
+  TError = void,
+>(
+  params?: UserControllerSearchParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof userControllerSearch>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof fetchInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getUserControllerSearchQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof userControllerSearch>>> = ({ signal }) =>
+    userControllerSearch(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof userControllerSearch>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type UserControllerSearchQueryResult = NonNullable<
+  Awaited<ReturnType<typeof userControllerSearch>>
+>;
+export type UserControllerSearchQueryError = void;
+
+export function useUserControllerSearch<
+  TData = Awaited<ReturnType<typeof userControllerSearch>>,
+  TError = void,
+>(
+  params: undefined | UserControllerSearchParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof userControllerSearch>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof userControllerSearch>>,
+          TError,
+          Awaited<ReturnType<typeof userControllerSearch>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof fetchInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUserControllerSearch<
+  TData = Awaited<ReturnType<typeof userControllerSearch>>,
+  TError = void,
+>(
+  params?: UserControllerSearchParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof userControllerSearch>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof userControllerSearch>>,
+          TError,
+          Awaited<ReturnType<typeof userControllerSearch>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof fetchInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUserControllerSearch<
+  TData = Awaited<ReturnType<typeof userControllerSearch>>,
+  TError = void,
+>(
+  params?: UserControllerSearchParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof userControllerSearch>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof fetchInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Search users by username
+ */
+
+export function useUserControllerSearch<
+  TData = Awaited<ReturnType<typeof userControllerSearch>>,
+  TError = void,
+>(
+  params?: UserControllerSearchParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof userControllerSearch>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof fetchInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getUserControllerSearchQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 /**
  * @summary Get current authenticated user profile

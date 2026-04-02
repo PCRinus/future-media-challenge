@@ -19,4 +19,6 @@ export * from './paginatedMessagesResponseDto';
 export * from './registerDto';
 export * from './tagResponseDto';
 export * from './updateMessageDto';
+export * from './userControllerSearchParams';
 export * from './userResponseDto';
+export * from './userSearchResultDto';
