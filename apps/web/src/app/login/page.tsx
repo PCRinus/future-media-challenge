@@ -68,12 +68,7 @@ export default function LoginPage() {
 
           <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              {...register('email')}
-            />
+            <Input id="email" type="email" autoComplete="email" {...register('email')} />
             {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>}
           </div>
 

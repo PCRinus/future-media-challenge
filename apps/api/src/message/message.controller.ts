@@ -26,10 +26,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { JwtPayload } from '../auth/strategies/jwt.strategy';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { MessageFilterDto } from './dto/message-filter.dto';
-import {
-  MessageResponseDto,
-  PaginatedMessagesResponseDto,
-} from './dto/message-response.dto';
+import { MessageResponseDto, PaginatedMessagesResponseDto } from './dto/message-response.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { MessageService } from './message.service';
 

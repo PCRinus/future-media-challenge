@@ -1,9 +1,5 @@
 import { EntityManager } from '@mikro-orm/postgresql';
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import * as argon2 from 'argon2';
 
 import { User } from './user.entity';
@@ -24,11 +20,7 @@ export class UserService {
     return user;
   }
 
-  async create(
-    username: string,
-    email: string,
-    password: string,
-  ): Promise<User> {
+  async create(username: string, email: string, password: string): Promise<User> {
     const existing = await this.em.findOne(User, {
       $or: [{ email }, { username }],
     });

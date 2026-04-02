@@ -6,7 +6,10 @@ import { Message } from '../message/message.entity';
 const UserSchema = defineEntity({
   name: 'User',
   properties: {
-    id: p.uuid().primary().onCreate(() => v7()),
+    id: p
+      .uuid()
+      .primary()
+      .onCreate(() => v7()),
     username: p.string().unique(),
     email: p.string().unique(),
     passwordHash: p.string().hidden(),

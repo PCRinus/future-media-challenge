@@ -61,7 +61,13 @@ describe('MessageCard', () => {
   describe('when user is not the author', () => {
     it('does not show Edit or Delete buttons', () => {
       mockUseAuth.mockReturnValue({
-        user: { id: 'other-user', username: 'bob', email: 'bob@test.com', createdAt: '', updatedAt: '' },
+        user: {
+          id: 'other-user',
+          username: 'bob',
+          email: 'bob@test.com',
+          createdAt: '',
+          updatedAt: '',
+        },
         isLoading: false,
         isAuthenticated: true,
         login: vi.fn(),
@@ -77,7 +83,13 @@ describe('MessageCard', () => {
   describe('when user is the author', () => {
     beforeEach(() => {
       mockUseAuth.mockReturnValue({
-        user: { id: 'user-1', username: 'alice', email: 'alice@test.com', createdAt: '', updatedAt: '' },
+        user: {
+          id: 'user-1',
+          username: 'alice',
+          email: 'alice@test.com',
+          createdAt: '',
+          updatedAt: '',
+        },
         isLoading: false,
         isAuthenticated: true,
         login: vi.fn(),

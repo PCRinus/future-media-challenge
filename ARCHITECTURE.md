@@ -101,18 +101,18 @@ The full stack runs via `docker compose up`:
 
 ## API Endpoints
 
-| Method | Path              | Auth     | Description                         |
-| ------ | ----------------- | -------- | ----------------------------------- |
-| POST   | /auth/register    | Public   | Create account, receive JWT         |
-| POST   | /auth/login       | Public   | Authenticate, receive JWT           |
-| GET    | /users/me         | Required | Current user profile                |
-| GET    | /messages         | Public   | List messages (filtered, paginated) |
-| POST   | /messages         | Required | Create a message                    |
-| PATCH  | /messages/:id     | Owner    | Update own message                  |
-| DELETE | /messages/:id     | Owner    | Delete own message                  |
-| GET    | /tags             | Public   | List all tags                       |
-| POST   | /tags             | Required | Create a tag                        |
-| GET    | /health           | Public   | Health check (DB connectivity)      |
+| Method | Path           | Auth     | Description                         |
+| ------ | -------------- | -------- | ----------------------------------- |
+| POST   | /auth/register | Public   | Create account, receive JWT         |
+| POST   | /auth/login    | Public   | Authenticate, receive JWT           |
+| GET    | /users/me      | Required | Current user profile                |
+| GET    | /messages      | Public   | List messages (filtered, paginated) |
+| POST   | /messages      | Required | Create a message                    |
+| PATCH  | /messages/:id  | Owner    | Update own message                  |
+| DELETE | /messages/:id  | Owner    | Delete own message                  |
+| GET    | /tags          | Public   | List all tags                       |
+| POST   | /tags          | Required | Create a tag                        |
+| GET    | /health        | Public   | Health check (DB connectivity)      |
 
 Full OpenAPI documentation is available at `/api` when the server is running.
 
@@ -121,6 +121,7 @@ Full OpenAPI documentation is available at `/api` when the server is running.
 Unit tests use **Vitest** with **unplugin-swc** for SWC-based compilation (matching the NestJS build toolchain). Tests mock the ORM's `EntityManager` and service dependencies.
 
 Coverage:
+
 - **MessageService** — 13 tests (CRUD, ownership enforcement, pagination, filtering)
 - **AuthService** — 4 tests (register, login success/failure scenarios)
 

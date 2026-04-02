@@ -189,9 +189,9 @@ describe('MessageService', () => {
     it('should throw ForbiddenException when non-owner updates', async () => {
       em.findOne.mockResolvedValue(mockMessage);
 
-      await expect(
-        service.update('other-user', 'msg-1', { content: 'Hacked' }),
-      ).rejects.toThrow(ForbiddenException);
+      await expect(service.update('other-user', 'msg-1', { content: 'Hacked' })).rejects.toThrow(
+        ForbiddenException,
+      );
     });
   });
 
@@ -208,17 +208,13 @@ describe('MessageService', () => {
     it('should throw ForbiddenException when non-owner deletes', async () => {
       em.findOne.mockResolvedValue(mockMessage);
 
-      await expect(service.delete('other-user', 'msg-1')).rejects.toThrow(
-        ForbiddenException,
-      );
+      await expect(service.delete('other-user', 'msg-1')).rejects.toThrow(ForbiddenException);
     });
 
     it('should throw NotFoundException when message does not exist', async () => {
       em.findOne.mockResolvedValue(null);
 
-      await expect(service.delete('user-1', 'nonexistent')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.delete('user-1', 'nonexistent')).rejects.toThrow(NotFoundException);
     });
   });
 });

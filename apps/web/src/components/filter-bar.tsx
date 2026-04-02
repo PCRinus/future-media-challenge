@@ -27,7 +27,9 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
     onChange({ ...filters, ...partial });
   };
 
-  const activeCount = [filters.tagId, filters.userId, filters.dateFrom, filters.dateTo].filter(Boolean).length;
+  const activeCount = [filters.tagId, filters.userId, filters.dateFrom, filters.dateTo].filter(
+    Boolean,
+  ).length;
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
@@ -37,7 +39,12 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
         className="flex w-full items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300"
       >
         <span>
-          Filters{activeCount > 0 && <span className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-gray-900 text-xs text-white dark:bg-gray-100 dark:text-gray-900">{activeCount}</span>}
+          Filters
+          {activeCount > 0 && (
+            <span className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-gray-900 text-xs text-white dark:bg-gray-100 dark:text-gray-900">
+              {activeCount}
+            </span>
+          )}
         </span>
         <svg
           className={`h-4 w-4 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`}
@@ -51,7 +58,7 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
       </Button>
 
       {open && (
-        <div className="border-t border-gray-200 px-4 pb-3 pt-3 dark:border-gray-800">
+        <div className="border-t border-gray-200 px-4 pt-3 pb-3 dark:border-gray-800">
           <div className="flex flex-wrap items-end gap-3">
             <div className="flex flex-col gap-1">
               <Label htmlFor="filter-tag" className="text-xs text-gray-500">
@@ -111,11 +118,7 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
             </div>
 
             {activeCount > 0 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onChange({})}
-              >
+              <Button variant="ghost" size="sm" onClick={() => onChange({})}>
                 Clear all
               </Button>
             )}

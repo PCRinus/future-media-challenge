@@ -1,8 +1,6 @@
 {
   "name": "public",
-  "namespaces": [
-    "public"
-  ],
+  "namespaces": ["public"],
   "tables": [
     {
       "name": "message",
@@ -101,10 +99,7 @@
       },
       "indexes": [
         {
-          "columnNames": [
-            "created_at",
-            "id"
-          ],
+          "columnNames": ["created_at", "id"],
           "composite": true,
           "constraint": false,
           "keyName": "message_created_at_id_index",
@@ -112,9 +107,7 @@
           "primary": false
         },
         {
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": false,
           "keyName": "message_pkey",
@@ -125,28 +118,20 @@
       "checks": [],
       "foreignKeys": {
         "message_author_id_foreign": {
-          "columnNames": [
-            "author_id"
-          ],
+          "columnNames": ["author_id"],
           "constraintName": "message_author_id_foreign",
           "localTableName": "public.message",
           "referencedTableName": "public.user",
-          "referencedColumnNames": [
-            "id"
-          ],
+          "referencedColumnNames": ["id"],
           "updateRule": "no action",
           "deleteRule": "no action"
         },
         "message_tag_id_foreign": {
-          "columnNames": [
-            "tag_id"
-          ],
+          "columnNames": ["tag_id"],
           "constraintName": "message_tag_id_foreign",
           "localTableName": "public.message",
           "referencedTableName": "public.tag",
-          "referencedColumnNames": [
-            "id"
-          ],
+          "referencedColumnNames": ["id"],
           "updateRule": "no action",
           "deleteRule": "no action"
         }
@@ -206,9 +191,7 @@
       },
       "indexes": [
         {
-          "columnNames": [
-            "name"
-          ],
+          "columnNames": ["name"],
           "composite": false,
           "constraint": true,
           "keyName": "tag_name_unique",
@@ -216,9 +199,7 @@
           "primary": false
         },
         {
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": false,
           "keyName": "tag_pkey",
@@ -328,9 +309,7 @@
       },
       "indexes": [
         {
-          "columnNames": [
-            "email"
-          ],
+          "columnNames": ["email"],
           "composite": false,
           "constraint": true,
           "keyName": "user_email_unique",
@@ -338,9 +317,7 @@
           "primary": false
         },
         {
-          "columnNames": [
-            "id"
-          ],
+          "columnNames": ["id"],
           "composite": false,
           "constraint": false,
           "keyName": "user_pkey",
@@ -348,9 +325,7 @@
           "primary": true
         },
         {
-          "columnNames": [
-            "username"
-          ],
+          "columnNames": ["username"],
           "composite": false,
           "constraint": true,
           "keyName": "user_username_unique",

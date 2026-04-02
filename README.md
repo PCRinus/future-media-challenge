@@ -58,33 +58,33 @@ pnpm test
 
 ## Common Commands
 
-| Command                          | Description                                        |
-| -------------------------------- | -------------------------------------------------- |
-| `pnpm dev`                       | Start DB container + API + web in parallel          |
-| `pnpm dev:api`                   | Start only the API dev server                      |
-| `pnpm dev:web`                   | Start only the web dev server                      |
-| `pnpm db`                        | Start the PostgreSQL container                     |
-| `pnpm db:stop`                   | Stop all Docker containers                         |
-| `pnpm prod`                      | Build & run production stack via Docker             |
-| `pnpm prod:build`                | Build production Docker images only                |
-| `pnpm test`                      | Run all tests                                      |
-| `pnpm lint`                      | Lint all packages                                  |
-| `pnpm format`                    | Format all files with Prettier                     |
-| `pnpm generate`                  | Regenerate OpenAPI spec + client types             |
-| `pnpm --filter api seed`         | Seed demo data                                     |
-| `pnpm --filter api migration:up` | Run database migrations                            |
+| Command                          | Description                                |
+| -------------------------------- | ------------------------------------------ |
+| `pnpm dev`                       | Start DB container + API + web in parallel |
+| `pnpm dev:api`                   | Start only the API dev server              |
+| `pnpm dev:web`                   | Start only the web dev server              |
+| `pnpm db`                        | Start the PostgreSQL container             |
+| `pnpm db:stop`                   | Stop all Docker containers                 |
+| `pnpm prod`                      | Build & run production stack via Docker    |
+| `pnpm prod:build`                | Build production Docker images only        |
+| `pnpm test`                      | Run all tests                              |
+| `pnpm lint`                      | Lint all packages                          |
+| `pnpm format`                    | Format all files with Prettier             |
+| `pnpm generate`                  | Regenerate OpenAPI spec + client types     |
+| `pnpm --filter api seed`         | Seed demo data                             |
+| `pnpm --filter api migration:up` | Run database migrations                    |
 
 ## Environment Variables
 
 See [`.env.example`](.env.example) for all required variables:
 
-| Variable       | Description                 | Default                                          |
-| -------------- | --------------------------- | ------------------------------------------------ |
-| `DATABASE_URL` | PostgreSQL connection URL   | `postgresql://postgres:postgres@localhost:5432/future_media` |
-| `JWT_SECRET`   | Secret for signing JWTs     | —                                                |
-| `JWT_EXPIRATION` | Token lifetime            | `1h`                                             |
-| `PORT`         | API server port             | `3167`                                           |
-| `CORS_ORIGIN`  | Allowed frontend origin     | `http://localhost:3000`                           |
+| Variable         | Description               | Default                                                      |
+| ---------------- | ------------------------- | ------------------------------------------------------------ |
+| `DATABASE_URL`   | PostgreSQL connection URL | `postgresql://postgres:postgres@localhost:5432/future_media` |
+| `JWT_SECRET`     | Secret for signing JWTs   | —                                                            |
+| `JWT_EXPIRATION` | Token lifetime            | `1h`                                                         |
+| `PORT`           | API server port           | `3167`                                                       |
+| `CORS_ORIGIN`    | Allowed frontend origin   | `http://localhost:3000`                                      |
 
 ## Project Structure
 

@@ -43,12 +43,12 @@ const MESSAGES = [
   'Is it just me or does every npm package have 47 dependencies?',
   'Automated testing saved my bacon today.',
   'Productivity hack: close Slack and write code.',
-  'The cloud is just someone else\'s computer, running your bugs.',
+  "The cloud is just someone else's computer, running your bugs.",
   'Who needs sleep when you have caffeine and deadlines?',
   'New personal record: zero console.log statements in production.',
   'If debugging is removing bugs, then programming is adding them.',
   'Pair programming: because two confused developers are better than one.',
-  'Just refactored a 2000-line file into 15 modules. Chef\'s kiss.',
+  "Just refactored a 2000-line file into 15 modules. Chef's kiss.",
   'Today I mass-learned that YAML indentation matters. The hard way.',
 ];
 
@@ -106,9 +106,7 @@ async function seed() {
       console.log(`Skipping messages — ${existingCount} already exist.`);
     }
 
-    console.log(
-      `Seed complete: ${tags.length} tags, ${users.length} users.`,
-    );
+    console.log(`Seed complete: ${tags.length} tags, ${users.length} users.`);
   } finally {
     await orm.close();
   }

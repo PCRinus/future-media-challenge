@@ -8,7 +8,10 @@ const MessageSchema = defineEntity({
   name: 'Message',
   indexes: [{ properties: ['createdAt', 'id'] }],
   properties: {
-    id: p.uuid().primary().onCreate(() => v7()),
+    id: p
+      .uuid()
+      .primary()
+      .onCreate(() => v7()),
     content: p.string().length(240),
     author: () => p.manyToOne(User),
     tag: () => p.manyToOne(Tag),

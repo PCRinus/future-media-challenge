@@ -6,7 +6,10 @@ import { Message } from '../message/message.entity';
 const TagSchema = defineEntity({
   name: 'Tag',
   properties: {
-    id: p.uuid().primary().onCreate(() => v7()),
+    id: p
+      .uuid()
+      .primary()
+      .onCreate(() => v7()),
     name: p.string().unique(),
     createdAt: p.datetime().onCreate(() => new Date()),
     messages: () => p.oneToMany(Message).mappedBy('tag'),

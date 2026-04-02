@@ -12,11 +12,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(
-    username: string,
-    email: string,
-    password: string,
-  ): Promise<string> {
+  async register(username: string, email: string, password: string): Promise<string> {
     const user = await this.userService.create(username, email, password);
     return this.issueToken(user.id, user.email);
   }

@@ -32,7 +32,13 @@ interface MessageCardProps {
   isDeleting?: boolean;
 }
 
-export function MessageCard({ message, onSaveEdit, isSaving, onDelete, isDeleting }: MessageCardProps) {
+export function MessageCard({
+  message,
+  onSaveEdit,
+  isSaving,
+  onDelete,
+  isDeleting,
+}: MessageCardProps) {
   const { user } = useAuth();
   const isAuthor = user?.id === message.author.id;
   const [editing, setEditing] = useState(false);
@@ -70,11 +76,18 @@ export function MessageCard({ message, onSaveEdit, isSaving, onDelete, isDeletin
           </span>
           <span className="font-medium">{message.author.username}</span>
           <span className="text-gray-400">·</span>
-          <time className="text-gray-500" dateTime={message.createdAt} title={new Date(message.createdAt).toLocaleString()}>
+          <time
+            className="text-gray-500"
+            dateTime={message.createdAt}
+            title={new Date(message.createdAt).toLocaleString()}
+          >
             {formatRelativeTime(message.createdAt)}
           </time>
           {message.updatedAt !== message.createdAt && (
-            <span className="text-gray-400" title={`Edited ${new Date(message.updatedAt).toLocaleString()}`}>
+            <span
+              className="text-gray-400"
+              title={`Edited ${new Date(message.updatedAt).toLocaleString()}`}
+            >
               (edited)
             </span>
           )}
@@ -82,18 +95,10 @@ export function MessageCard({ message, onSaveEdit, isSaving, onDelete, isDeletin
 
         {isAuthor && !editing && !confirmDelete && (
           <div className="flex gap-1">
-            <Button
-              variant="ghost"
-              size="xs"
-              onClick={() => setEditing(true)}
-            >
+            <Button variant="ghost" size="xs" onClick={() => setEditing(true)}>
               Edit
             </Button>
-            <Button
-              variant="destructive"
-              size="xs"
-              onClick={() => setConfirmDelete(true)}
-            >
+            <Button variant="destructive" size="xs" onClick={() => setConfirmDelete(true)}>
               Delete
             </Button>
           </div>
@@ -114,18 +119,10 @@ export function MessageCard({ message, onSaveEdit, isSaving, onDelete, isDeletin
               {remaining}
             </span>
             <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="xs"
-                onClick={handleCancel}
-              >
+              <Button variant="ghost" size="xs" onClick={handleCancel}>
                 Cancel
               </Button>
-              <Button
-                size="xs"
-                onClick={handleSave}
-                disabled={!editContent.trim() || isSaving}
-              >
+              <Button size="xs" onClick={handleSave} disabled={!editContent.trim() || isSaving}>
                 {isSaving ? 'Saving…' : 'Save'}
               </Button>
             </div>
@@ -138,19 +135,10 @@ export function MessageCard({ message, onSaveEdit, isSaving, onDelete, isDeletin
       {confirmDelete && (
         <div className="mt-3 flex items-center gap-3 rounded-md bg-red-50 p-3 dark:bg-red-950/30">
           <p className="flex-1 text-xs text-red-700 dark:text-red-400">Delete this message?</p>
-          <Button
-            variant="ghost"
-            size="xs"
-            onClick={() => setConfirmDelete(false)}
-          >
+          <Button variant="ghost" size="xs" onClick={() => setConfirmDelete(false)}>
             Cancel
           </Button>
-          <Button
-            variant="destructive"
-            size="xs"
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
+          <Button variant="destructive" size="xs" onClick={handleDelete} disabled={isDeleting}>
             {isDeleting ? 'Deleting…' : 'Delete'}
           </Button>
         </div>

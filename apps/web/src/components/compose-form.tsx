@@ -4,7 +4,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import { getMessageControllerFindAllQueryKey, useMessageControllerCreate } from '@/api/messages/messages';
+import {
+  getMessageControllerFindAllQueryKey,
+  useMessageControllerCreate,
+} from '@/api/messages/messages';
 import { useTagControllerFindAll } from '@/api/tags/tags';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -39,7 +42,10 @@ export function ComposeForm() {
   const remaining = 240 - content.length;
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950"
+    >
       <Textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
