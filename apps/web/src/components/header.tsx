@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/auth-context';
 
 export function Header() {
@@ -38,14 +39,15 @@ export function Header() {
 
         {user && (
           <div className="relative" ref={menuRef}>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon-sm"
               onClick={() => setMenuOpen((o) => !o)}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+              className="rounded-full"
               aria-label="User menu"
             >
               {user.username.charAt(0).toUpperCase()}
-            </button>
+            </Button>
 
             {menuOpen && (
               <div className="absolute right-0 z-10 mt-2 w-48 rounded-md border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900">
@@ -53,13 +55,13 @@ export function Header() {
                   <p className="text-sm font-medium">{user.username}</p>
                   <p className="text-xs text-gray-500">{user.email}</p>
                 </div>
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
                   onClick={handleLogout}
-                  className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-50 dark:text-red-400 dark:hover:bg-gray-800"
+                  className="w-full justify-start px-4 py-2 text-sm text-red-600 dark:text-red-400"
                 >
                   Sign out
-                </button>
+                </Button>
               </div>
             )}
           </div>

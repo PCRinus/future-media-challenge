@@ -3,6 +3,9 @@
 import { useState } from 'react';
 
 import { useTagControllerFindAll } from '@/api/tags/tags';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export interface Filters {
   tagId?: string;
@@ -28,8 +31,8 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300"
       >
@@ -45,15 +48,15 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
-      </button>
+      </Button>
 
       {open && (
         <div className="border-t border-gray-200 px-4 pb-3 pt-3 dark:border-gray-800">
           <div className="flex flex-wrap items-end gap-3">
             <div className="flex flex-col gap-1">
-              <label htmlFor="filter-tag" className="text-xs font-medium text-gray-500">
+              <Label htmlFor="filter-tag" className="text-xs text-gray-500">
                 Tag
-              </label>
+              </Label>
               <select
                 id="filter-tag"
                 value={filters.tagId ?? ''}
@@ -70,53 +73,51 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
             </div>
 
             <div className="flex flex-col gap-1">
-              <label htmlFor="filter-user" className="text-xs font-medium text-gray-500">
+              <Label htmlFor="filter-user" className="text-xs text-gray-500">
                 User
-              </label>
-              <input
+              </Label>
+              <Input
                 id="filter-user"
                 type="text"
                 placeholder="User ID"
                 value={filters.userId ?? ''}
                 onChange={(e) => update({ userId: e.target.value || undefined })}
-                className="w-36 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900"
+                className="w-36"
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <label htmlFor="filter-from" className="text-xs font-medium text-gray-500">
+              <Label htmlFor="filter-from" className="text-xs text-gray-500">
                 From
-              </label>
-              <input
+              </Label>
+              <Input
                 id="filter-from"
                 type="date"
                 value={filters.dateFrom ?? ''}
                 onChange={(e) => update({ dateFrom: e.target.value || undefined })}
-                className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900"
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <label htmlFor="filter-to" className="text-xs font-medium text-gray-500">
+              <Label htmlFor="filter-to" className="text-xs text-gray-500">
                 To
-              </label>
-              <input
+              </Label>
+              <Input
                 id="filter-to"
                 type="date"
                 value={filters.dateTo ?? ''}
                 onChange={(e) => update({ dateTo: e.target.value || undefined })}
-                className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900"
               />
             </div>
 
             {activeCount > 0 && (
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => onChange({})}
-                className="rounded-md px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-300"
               >
                 Clear all
-              </button>
+              </Button>
             )}
           </div>
         </div>

@@ -3,6 +3,9 @@
 import { useState } from 'react';
 
 import type { MessageResponseDto } from '@/api/model';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/contexts/auth-context';
 
 function formatRelativeTime(dateString: string) {
@@ -79,53 +82,52 @@ export function MessageCard({ message, onSaveEdit, isSaving, onDelete, isDeletin
 
         {isAuthor && !editing && !confirmDelete && (
           <div className="flex gap-1">
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="xs"
               onClick={() => setEditing(true)}
-              className="rounded px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-300"
             >
               Edit
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="destructive"
+              size="xs"
               onClick={() => setConfirmDelete(true)}
-              className="rounded px-2 py-1 text-xs text-red-500 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950 dark:hover:text-red-400"
             >
               Delete
-            </button>
+            </Button>
           </div>
         )}
       </div>
 
       {editing ? (
         <div className="mt-2">
-          <textarea
+          <Textarea
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
             maxLength={240}
             rows={3}
-            className="w-full resize-none rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm focus:border-gray-500 focus:outline-none dark:border-gray-700 dark:focus:border-gray-500"
+            className="resize-none"
           />
           <div className="mt-1 flex items-center justify-between">
             <span className={`text-xs ${remaining < 20 ? 'text-red-500' : 'text-gray-400'}`}>
               {remaining}
             </span>
             <div className="flex gap-2">
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="xs"
                 onClick={handleCancel}
-                className="rounded-md px-3 py-1 text-xs text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 Cancel
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                size="xs"
                 onClick={handleSave}
                 disabled={!editContent.trim() || isSaving}
-                className="rounded-md bg-gray-900 px-3 py-1 text-xs font-medium text-white hover:bg-gray-800 disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
               >
                 {isSaving ? 'Saving…' : 'Save'}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -136,28 +138,26 @@ export function MessageCard({ message, onSaveEdit, isSaving, onDelete, isDeletin
       {confirmDelete && (
         <div className="mt-3 flex items-center gap-3 rounded-md bg-red-50 p-3 dark:bg-red-950/30">
           <p className="flex-1 text-xs text-red-700 dark:text-red-400">Delete this message?</p>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="xs"
             onClick={() => setConfirmDelete(false)}
-            className="rounded-md px-3 py-1 text-xs text-gray-500 hover:bg-white dark:hover:bg-gray-800"
           >
             Cancel
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="destructive"
+            size="xs"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700 disabled:opacity-50"
           >
             {isDeleting ? 'Deleting…' : 'Delete'}
-          </button>
+          </Button>
         </div>
       )}
 
       <div className="mt-3">
-        <span className="inline-block rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-          {message.tag.name}
-        </span>
+        <Badge variant="secondary">{message.tag.name}</Badge>
       </div>
     </article>
   );

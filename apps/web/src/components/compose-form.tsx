@@ -6,6 +6,8 @@ import { toast } from 'sonner';
 
 import { getMessageControllerFindAllQueryKey, useMessageControllerCreate } from '@/api/messages/messages';
 import { useTagControllerFindAll } from '@/api/tags/tags';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { getErrorMessage } from '@/lib/get-error-message';
 
 export function ComposeForm() {
@@ -38,13 +40,13 @@ export function ComposeForm() {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">
-      <textarea
+      <Textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="What's on your mind?"
         maxLength={240}
         rows={3}
-        className="w-full resize-none rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:border-gray-500 focus:outline-none dark:border-gray-700 dark:focus:border-gray-500"
+        className="resize-none"
       />
 
       <div className="mt-2 flex items-center justify-between gap-3">
@@ -66,13 +68,13 @@ export function ComposeForm() {
           </span>
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={!content.trim() || !tagId || createMutation.isPending}
-          className="rounded-md bg-gray-900 px-4 py-1.5 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
+          size="sm"
         >
           {createMutation.isPending ? 'Posting…' : 'Post'}
-        </button>
+        </Button>
       </div>
     </form>
   );
