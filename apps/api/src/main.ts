@@ -30,7 +30,7 @@ async function bootstrap() {
     .setDescription('The API for the Future Media Challenge application')
     .setVersion('1.0')
     .setOpenAPIVersion('3.1.0')
-    .addBearerAuth()
+    .addCookieAuth('access_token')
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
