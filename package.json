@@ -8,6 +8,7 @@
     "dev": "docker compose up",
     "dev:watch": "docker compose watch",
     "dev:build": "docker compose up --build",
+    "dev:rebuild": "docker compose build --no-cache && docker compose up",
     "generate": "pnpm --filter api generate:openapi && pnpm --filter web generate:client",
     "generate:openapi": "pnpm --filter api generate:openapi",
     "lint": "pnpm -r run lint",
