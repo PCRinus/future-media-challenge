@@ -14,83 +14,65 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for design decisions, structure reasoning
   ```bash
   corepack enable && corepack prepare pnpm@latest --activate
   ```
-- **Docker** — required for the database and recommended for the full dev stack
+- **Docker** — required for PostgreSQL (and optional production builds)
 
-## Quick Start (Docker)
-
-The fastest way to get everything running:
+## Quick Start
 
 ```bash
-# 1. Clone and install dependencies
+# 1. Install dependencies
 pnpm install
 
 # 2. Copy environment variables
 cp .env.example .env
 
-# 3. Start PostgreSQL + API + pgAdmin
+# 3. Start the database and dev servers (API + Web)
 pnpm dev
 
 # 4. Run migrations (in a separate terminal)
-docker compose exec api pnpm migration:up
+pnpm --filter api migration:up
 
 # 5. Seed demo data (optional)
-docker compose exec api pnpm seed
+pnpm --filter api seed
 ```
 
 The API will be available at [http://localhost:3167](http://localhost:3167) with Swagger docs at [http://localhost:3167/api](http://localhost:3167/api).
 
-pgAdmin is available at [http://localhost:5050](http://localhost:5050) (login: `admin@admin.com` / `admin`).
+The web app will be available at [http://localhost:3000](http://localhost:3000).
 
-### With file watching (auto-sync + rebuild)
+## Production Build (Docker)
 
-```bash
-pnpm dev:watch
-```
-
-### Rebuild containers after dependency changes
+Build and run the full stack in production mode:
 
 ```bash
-pnpm dev:build
+pnpm prod
 ```
 
-## Local Development (without Docker)
-
-If you prefer running the API directly on your host:
-
-```bash
-# Ensure PostgreSQL is running locally and .env is configured
-cp .env.example .env
-
-# Install and start
-pnpm install
-pnpm --filter api migration:up
-pnpm --filter api start:dev
-```
+This builds optimized Docker images for the API and web app and starts them alongside PostgreSQL.
 
 ## Running Tests
 
 ```bash
-# API unit tests
-pnpm test:api
-
 # All tests across the monorepo
 pnpm test
 ```
 
 ## Common Commands
 
-| Command                          | Description                              |
-| -------------------------------- | ---------------------------------------- |
-| `pnpm dev`                       | Start full stack via Docker Compose      |
-| `pnpm dev:watch`                 | Start with file watching (auto-sync)     |
-| `pnpm dev:build`                 | Rebuild containers and start             |
-| `pnpm test:api`                  | Run API unit tests                       |
-| `pnpm test`                      | Run all tests                            |
-| `pnpm lint`                      | Lint all packages                        |
-| `pnpm format`                    | Format all files with Prettier           |
-| `pnpm generate`                  | Regenerate OpenAPI spec + client types   |
-| `pnpm --filter api seed`         | Seed demo data                           |
-| `pnpm --filter api migration:up` | Run database migrations                  |
+| Command                          | Description                                        |
+| -------------------------------- | -------------------------------------------------- |
+| `pnpm dev`                       | Start DB container + API + web in parallel          |
+| `pnpm dev:api`                   | Start only the API dev server                      |
+| `pnpm dev:web`                   | Start only the web dev server                      |
+| `pnpm db`                        | Start the PostgreSQL container                     |
+| `pnpm db:stop`                   | Stop all Docker containers                         |
+| `pnpm prod`                      | Build & run production stack via Docker             |
+| `pnpm prod:build`                | Build production Docker images only                |
+| `pnpm test`                      | Run all tests                                      |
+| `pnpm lint`                      | Lint all packages                                  |
+| `pnpm format`                    | Format all files with Prettier                     |
+| `pnpm generate`                  | Regenerate OpenAPI spec + client types             |
+| `pnpm --filter api seed`         | Seed demo data                                     |
+| `pnpm --filter api migration:up` | Run database migrations                            |
 
 ## Environment Variables
 

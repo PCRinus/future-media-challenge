@@ -9,7 +9,7 @@
   "packageManager": "pnpm@10.24.0",
   "scripts": {
     "test": "pnpm -r run test",
-    "dev": "pnpm -r --parallel run dev",
+    "dev": "docker compose up -d db && pnpm -r --parallel run dev",
     "dev:api": "pnpm --filter api run dev",
     "dev:web": "pnpm --filter web run dev",
     "db": "docker compose up -d db",
