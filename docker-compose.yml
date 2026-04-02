@@ -1,5 +1,6 @@
 services:
   db:
+    container_name: db
     image: postgres:17-alpine
     restart: unless-stopped
     environment:
@@ -7,16 +8,17 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: future_media
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
 
   pgadmin:
+    container_name: pgadmin
     profiles: [tools]
     image: dpage/pgadmin4:latest
     restart: unless-stopped
@@ -25,7 +27,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_LISTEN_PORT: 5050
     ports:
-      - '5050:5050'
+      - "5050:5050"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
@@ -33,6 +35,7 @@ services:
         condition: service_healthy
 
   api:
+    container_name: api
     profiles: [prod]
     build:
       context: .
@@ -40,7 +43,7 @@ services:
       target: prod
     restart: unless-stopped
     ports:
-      - '3167:3167'
+      - "3167:3167"
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/future_media
       JWT_SECRET: change-me-in-production
@@ -51,6 +54,7 @@ services:
         condition: service_healthy
 
   web:
+    container_name: web
     profiles: [prod]
     build:
       context: .
@@ -58,7 +62,7 @@ services:
       target: prod
     restart: unless-stopped
     ports:
-      - '3000:3000'
+      - "3000:3000"
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:3167
     depends_on:
