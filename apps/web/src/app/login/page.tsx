@@ -36,8 +36,8 @@ export default function LoginPage() {
 
   const loginMutation = useAuthControllerLogin({
     mutation: {
-      onSuccess: (data) => {
-        login(data.accessToken);
+      onSuccess: () => {
+        login();
         router.push('/');
       },
       onError: (err: unknown) => {

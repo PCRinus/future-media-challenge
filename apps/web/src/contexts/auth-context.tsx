@@ -1,58 +1,45 @@
 'use client';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { createContext, useCallback, useContext, useMemo, useSyncExternalStore } from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
 
+import { useAuthControllerLogout } from '@/api/auth/auth';
 import type { UserResponseDto } from '@/api/model';
 import { getUserControllerMeQueryKey, useUserControllerMe } from '@/api/users/users';
-import { clearToken, getToken, setToken } from '@/lib/api-client';
 
 interface AuthContextValue {
   user: UserResponseDto | undefined;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (accessToken: string) => void;
+  login: () => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-// useSyncExternalStore reads the JWT from localStorage (an external store).
-// - subscribe (noop): we don't need push notifications — re-renders from
-//   queryClient.invalidateQueries() cause React to re-read the snapshot.
-// - getSnapshot (getToken): reads the current token from localStorage.
-// - getServerSnapshot (() => null): returns null during SSR (no localStorage),
-//   letting React handle the server/client divergence without hydration errors.
-const noop = () => () => {};
-
-function useToken() {
-  return useSyncExternalStore(noop, getToken, () => null);
-}
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient();
-  const token = useToken();
 
   const { data: user, isLoading } = useUserControllerMe({
     query: {
-      enabled: !!token,
       retry: false,
     },
   });
 
-  const login = useCallback(
-    (accessToken: string) => {
-      setToken(accessToken);
-      queryClient.invalidateQueries({ queryKey: getUserControllerMeQueryKey() });
-    },
-    [queryClient],
-  );
+  const logoutMutation = useAuthControllerLogout();
+
+  const login = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: getUserControllerMeQueryKey() });
+  }, [queryClient]);
 
   const logout = useCallback(() => {
-    clearToken();
-    queryClient.setQueryData(getUserControllerMeQueryKey(), undefined);
-    queryClient.removeQueries({ queryKey: getUserControllerMeQueryKey() });
-  }, [queryClient]);
+    logoutMutation.mutate(undefined, {
+      onSettled: () => {
+        queryClient.setQueryData(getUserControllerMeQueryKey(), undefined);
+        queryClient.removeQueries({ queryKey: getUserControllerMeQueryKey() });
+      },
+    });
+  }, [logoutMutation, queryClient]);
 
   const value = useMemo<AuthContextValue>(
     () => ({

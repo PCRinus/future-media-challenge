@@ -37,8 +37,8 @@ export default function RegisterPage() {
 
   const registerMutation = useAuthControllerRegister({
     mutation: {
-      onSuccess: (data) => {
-        login(data.accessToken);
+      onSuccess: () => {
+        login();
         router.push('/');
       },
       onError: (err: unknown) => {
