@@ -1,11 +1,14 @@
 'use client';
 
+import { format, parseISO } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
 import { useState } from 'react';
 
 import { useTagControllerFindAll } from '@/api/tags/tags';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -13,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 
 import { UserCombobox } from './user-combobox';
 
@@ -97,26 +101,20 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label htmlFor="filter-from" className="text-xs text-gray-500">
-                From
-              </Label>
-              <Input
-                id="filter-from"
-                type="date"
-                value={filters.dateFrom ?? ''}
-                onChange={(e) => update({ dateFrom: e.target.value || undefined })}
+              <Label className="text-xs text-gray-500">From</Label>
+              <DatePicker
+                value={filters.dateFrom}
+                onChange={(v) => update({ dateFrom: v })}
+                placeholder="Pick a date"
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label htmlFor="filter-to" className="text-xs text-gray-500">
-                To
-              </Label>
-              <Input
-                id="filter-to"
-                type="date"
-                value={filters.dateTo ?? ''}
-                onChange={(e) => update({ dateTo: e.target.value || undefined })}
+              <Label className="text-xs text-gray-500">To</Label>
+              <DatePicker
+                value={filters.dateTo}
+                onChange={(v) => update({ dateTo: v })}
+                placeholder="Pick a date"
               />
             </div>
 
@@ -129,5 +127,43 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
         </div>
       )}
     </div>
+  );
+}
+
+function DatePicker({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value?: string;
+  onChange: (value: string | undefined) => void;
+  placeholder: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const date = value ? parseISO(value) : undefined;
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn('w-[200px] justify-start font-normal', !date && 'text-muted-foreground')}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {date ? format(date, 'PPP') : placeholder}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={(d) => {
+            onChange(d ? format(d, 'yyyy-MM-dd') : undefined);
+            setOpen(false);
+          }}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
   );
 }
