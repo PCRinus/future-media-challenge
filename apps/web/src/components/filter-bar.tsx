@@ -14,6 +14,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+import { UserCombobox } from './user-combobox';
+
 export interface Filters {
   tagId?: string;
   userId?: string;
@@ -90,17 +92,8 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
             </div>
 
             <div className="flex flex-col gap-1">
-              <Label htmlFor="filter-user" className="text-xs text-gray-500">
-                User
-              </Label>
-              <Input
-                id="filter-user"
-                type="text"
-                placeholder="User ID"
-                value={filters.userId ?? ''}
-                onChange={(e) => update({ userId: e.target.value || undefined })}
-                className="w-36"
-              />
+              <Label className="text-xs text-gray-500">User</Label>
+              <UserCombobox value={filters.userId} onChange={(userId) => update({ userId })} />
             </div>
 
             <div className="flex flex-col gap-1">
