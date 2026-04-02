@@ -1,6 +1,54 @@
 {
   "openapi": "3.1.0",
   "paths": {
+    "/users/search": {
+      "get": {
+        "operationId": "UserController_search",
+        "parameters": [
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Search term to match against usernames",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Maximum number of results to return",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of matching users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserSearchResultDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "summary": "Search users by username",
+        "tags": [
+          "users"
+        ]
+      }
+    },
     "/users/me": {
       "get": {
         "operationId": "UserController_me",
@@ -20,13 +68,10 @@
             "description": "Unauthorized"
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
         "summary": "Get current authenticated user profile",
-        "tags": ["users"]
+        "tags": [
+          "users"
+        ]
       }
     },
     "/auth/register": {
@@ -55,7 +100,9 @@
             }
           }
         },
-        "tags": ["Auth"]
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/auth/login": {
@@ -84,7 +131,9 @@
             }
           }
         },
-        "tags": ["Auth"]
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/auth/logout": {
@@ -103,7 +152,9 @@
             }
           }
         },
-        "tags": ["Auth"]
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/health": {
@@ -126,7 +177,9 @@
           }
         },
         "summary": "Health check",
-        "tags": ["Health"]
+        "tags": [
+          "Health"
+        ]
       }
     },
     "/tags": {
@@ -148,7 +201,9 @@
             }
           }
         },
-        "tags": ["Tags"]
+        "tags": [
+          "Tags"
+        ]
       },
       "post": {
         "operationId": "TagController_create",
@@ -175,12 +230,9 @@
             }
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Tags"]
+        "tags": [
+          "Tags"
+        ]
       }
     },
     "/messages": {
@@ -257,7 +309,9 @@
             }
           }
         },
-        "tags": ["Messages"]
+        "tags": [
+          "Messages"
+        ]
       },
       "post": {
         "operationId": "MessageController_create",
@@ -284,12 +338,9 @@
             }
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Messages"]
+        "tags": [
+          "Messages"
+        ]
       }
     },
     "/messages/{id}": {
@@ -327,12 +378,9 @@
             }
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Messages"]
+        "tags": [
+          "Messages"
+        ]
       },
       "delete": {
         "operationId": "MessageController_delete",
@@ -351,12 +399,9 @@
             "description": "Message deleted"
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": ["Messages"]
+        "tags": [
+          "Messages"
+        ]
       }
     }
   },
@@ -370,6 +415,22 @@
   "servers": [],
   "components": {
     "schemas": {
+      "UserSearchResultDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "username"
+        ]
+      },
       "UserResponseDto": {
         "type": "object",
         "properties": {
@@ -393,7 +454,13 @@
             "type": "string"
           }
         },
-        "required": ["id", "username", "email", "createdAt", "updatedAt"]
+        "required": [
+          "id",
+          "username",
+          "email",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "RegisterDto": {
         "type": "object",
@@ -412,7 +479,11 @@
             "minLength": 8
           }
         },
-        "required": ["username", "email", "password"]
+        "required": [
+          "username",
+          "email",
+          "password"
+        ]
       },
       "AuthResponseDto": {
         "type": "object",
@@ -421,7 +492,9 @@
             "type": "string"
           }
         },
-        "required": ["message"]
+        "required": [
+          "message"
+        ]
       },
       "LoginDto": {
         "type": "object",
@@ -435,7 +508,10 @@
             "example": "strongPassword123"
           }
         },
-        "required": ["email", "password"]
+        "required": [
+          "email",
+          "password"
+        ]
       },
       "HealthResponseDto": {
         "type": "object",
@@ -449,7 +525,10 @@
             "example": "connected"
           }
         },
-        "required": ["status", "database"]
+        "required": [
+          "status",
+          "database"
+        ]
       },
       "TagResponseDto": {
         "type": "object",
@@ -466,7 +545,11 @@
             "type": "string"
           }
         },
-        "required": ["id", "name", "createdAt"]
+        "required": [
+          "id",
+          "name",
+          "createdAt"
+        ]
       },
       "CreateTagDto": {
         "type": "object",
@@ -476,7 +559,9 @@
             "example": "Technology"
           }
         },
-        "required": ["name"]
+        "required": [
+          "name"
+        ]
       },
       "MessageAuthorDto": {
         "type": "object",
@@ -489,7 +574,10 @@
             "type": "string"
           }
         },
-        "required": ["id", "username"]
+        "required": [
+          "id",
+          "username"
+        ]
       },
       "MessageTagDto": {
         "type": "object",
@@ -502,7 +590,10 @@
             "type": "string"
           }
         },
-        "required": ["id", "name"]
+        "required": [
+          "id",
+          "name"
+        ]
       },
       "MessageResponseDto": {
         "type": "object",
@@ -530,7 +621,14 @@
             "type": "string"
           }
         },
-        "required": ["id", "content", "author", "tag", "createdAt", "updatedAt"]
+        "required": [
+          "id",
+          "content",
+          "author",
+          "tag",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "PaginatedMessagesResponseDto": {
         "type": "object",
@@ -549,7 +647,11 @@
             "type": "boolean"
           }
         },
-        "required": ["items", "nextCursor", "hasMore"]
+        "required": [
+          "items",
+          "nextCursor",
+          "hasMore"
+        ]
       },
       "CreateMessageDto": {
         "type": "object",
@@ -564,7 +666,10 @@
             "example": "019d4a4e-8054-71b8-af3b-bd3c39d15719"
           }
         },
-        "required": ["content", "tagId"]
+        "required": [
+          "content",
+          "tagId"
+        ]
       },
       "UpdateMessageDto": {
         "type": "object",

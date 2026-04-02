@@ -1,4 +1,4 @@
-import { EntityManager } from '@mikro-orm/postgresql';
+import { EntityManager, FilterQuery, QueryOrder } from '@mikro-orm/postgresql';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import * as argon2 from 'argon2';
 
@@ -7,6 +7,14 @@ import { User } from './user.entity';
 @Injectable()
 export class UserService {
   constructor(private readonly em: EntityManager) {}
+
+  async search(query?: string, limit = 10): Promise<User[]> {
+    const where: FilterQuery<User> = query ? { username: { $ilike: `%${query}%` } } : {};
+    return this.em.find(User, where, {
+      orderBy: { username: QueryOrder.ASC },
+      limit,
+    });
+  }
 
   async findByEmail(email: string): Promise<User | null> {
     return this.em.findOne(User, { email });
