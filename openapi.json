@@ -93,6 +93,27 @@
         ]
       }
     },
+    "/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/health": {
       "get": {
         "operationId": "HealthController_check",
@@ -428,12 +449,12 @@
       "AuthResponseDto": {
         "type": "object",
         "properties": {
-          "accessToken": {
+          "message": {
             "type": "string"
           }
         },
         "required": [
-          "accessToken"
+          "message"
         ]
       },
       "LoginDto": {
