@@ -1,6 +1,6 @@
 'use client';
 
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, startOfDay } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -106,6 +106,7 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
                 value={filters.dateFrom}
                 onChange={(v) => update({ dateFrom: v })}
                 placeholder="Pick a date"
+                maxDate={new Date()}
               />
             </div>
 
@@ -115,6 +116,8 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
                 value={filters.dateTo}
                 onChange={(v) => update({ dateTo: v })}
                 placeholder="Pick a date"
+                minDate={filters.dateFrom ? startOfDay(parseISO(filters.dateFrom)) : undefined}
+                maxDate={new Date()}
               />
             </div>
 
@@ -134,13 +137,23 @@ function DatePicker({
   value,
   onChange,
   placeholder,
+  minDate,
+  maxDate,
 }: {
   value?: string;
   onChange: (value: string | undefined) => void;
   placeholder: string;
+  minDate?: Date;
+  maxDate?: Date;
 }) {
   const [open, setOpen] = useState(false);
   const date = value ? parseISO(value) : undefined;
+
+  const disabled = (day: Date) => {
+    if (maxDate && day > maxDate) return true;
+    if (minDate && day < minDate) return true;
+    return false;
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -161,6 +174,7 @@ function DatePicker({
             onChange(d ? format(d, 'yyyy-MM-dd') : undefined);
             setOpen(false);
           }}
+          disabled={disabled}
           initialFocus
         />
       </PopoverContent>
