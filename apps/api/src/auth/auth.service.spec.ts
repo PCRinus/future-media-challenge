@@ -62,7 +62,7 @@ describe('AuthService', () => {
         sub: 'user-1',
         email: 'john@test.com',
       });
-      expect(result).toEqual({ accessToken: 'mock-jwt-token' });
+      expect(result).toEqual('mock-jwt-token');
     });
   });
 
@@ -79,7 +79,7 @@ describe('AuthService', () => {
         sub: 'user-1',
         email: 'john@test.com',
       });
-      expect(result).toEqual({ accessToken: 'mock-jwt-token' });
+      expect(result).toEqual('mock-jwt-token');
     });
 
     it('should throw UnauthorizedException when email not found', async () => {
