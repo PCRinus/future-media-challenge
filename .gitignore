@@ -30,5 +30,8 @@ yarn-error.log*
 # testing
 coverage/
 
+# pnpm store
+.pnpm-store/
+
 # misc
 *.tsbuildinfo
