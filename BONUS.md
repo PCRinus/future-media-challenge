@@ -126,3 +126,8 @@ For the public `GET /messages` endpoint (which doesn't require auth), adding `Ca
 Some decisions already in the codebase should provide benefits under load without further changes:
 
 - **Cursor-based pagination** — offset pagination requires the database to scan and discard all preceding rows on each page. Cursor pagination uses an indexed seek (`WHERE (createdAt, id) < (?, ?)`) so every page is O(1) regardless of how deep into the feed a user scrolls.
+- **Composite index on `(createdAt, id)`** — the primary sort and cursor columns are already indexed together, meaning filtered and paginated queries hit the index rather than doing a full table scan.
+
+## Fault Tolerance
+
+Running multiple API instances behind a load balancer (e.g. AWS ALB) already gives horizontal fault tolerance — if one instance dies, the load balancer stops routing to it within one health check interval (`GET /health`).
