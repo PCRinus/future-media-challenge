@@ -14,7 +14,6 @@ export class UserController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current authenticated user profile' })
   @ApiOkResponse({ description: 'Current user profile', type: UserResponseDto })
   @ApiResponse({ status: 401, description: 'Unauthorized' })

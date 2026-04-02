@@ -13,13 +13,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiNoContentResponse,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -43,7 +37,6 @@ export class MessageController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @ApiCreatedResponse({ description: 'Message created', type: MessageResponseDto })
   async create(@Req() req: Request, @Body() dto: CreateMessageDto) {
     const user = req.user as JwtPayload;
@@ -52,7 +45,6 @@ export class MessageController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @ApiOkResponse({ description: 'Message updated', type: MessageResponseDto })
   async update(
     @Req() req: Request,
@@ -68,7 +60,6 @@ export class MessageController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse({ description: 'Message deleted' })
   async delete(@Req() req: Request, @Param('id', ParseUUIDPipe) id: string) {

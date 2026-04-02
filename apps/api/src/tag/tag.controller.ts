@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateTagDto } from './dto/create-tag.dto';
@@ -19,7 +19,6 @@ export class TagController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @ApiCreatedResponse({ description: 'Tag created', type: TagResponseDto })
   async create(@Body() dto: CreateTagDto) {
     return this.tagService.create(dto.name);
