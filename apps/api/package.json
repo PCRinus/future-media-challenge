@@ -7,8 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
+    "dev": "nest start --watch",
     "generate:openapi": "nest start --entryFile generate-openapi",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

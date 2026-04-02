@@ -16,37 +16,8 @@ services:
       timeout: 5s
       retries: 5
 
-  api:
-    build:
-      context: .
-      dockerfile: apps/api/Dockerfile
-      target: dev
-    restart: unless-stopped
-    ports:
-      - "3167:3167"
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/future_media
-      JWT_SECRET: change-me-in-production
-      JWT_EXPIRATION: 1h
-      PORT: 3167
-    volumes:
-      - .:/app
-      - api_root_modules:/app/node_modules
-      - api_modules:/app/apps/api/node_modules
-    depends_on:
-      db:
-        condition: service_healthy
-    develop:
-      watch:
-        - action: sync
-          path: ./apps/api/src
-          target: /app/apps/api/src
-        - action: rebuild
-          path: ./apps/api/package.json
-        - action: rebuild
-          path: ./pnpm-lock.yaml
-
   pgadmin:
+    profiles: [tools]
     image: dpage/pgadmin4:latest
     restart: unless-stopped
     environment:
@@ -61,37 +32,38 @@ services:
       db:
         condition: service_healthy
 
+  api:
+    profiles: [prod]
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: prod
+    restart: unless-stopped
+    ports:
+      - "3167:3167"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/future_media
+      JWT_SECRET: change-me-in-production
+      JWT_EXPIRATION: 1h
+      PORT: 3167
+    depends_on:
+      db:
+        condition: service_healthy
+
   web:
+    profiles: [prod]
     build:
       context: .
       dockerfile: apps/web/Dockerfile
-      target: dev
+      target: prod
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:3167
-      WATCHPACK_POLLING: "true"
-    volumes:
-      - .:/app
-      - web_root_modules:/app/node_modules
-      - web_modules:/app/apps/web/node_modules
     depends_on:
       - api
-    develop:
-      watch:
-        - action: sync
-          path: ./apps/web/src
-          target: /app/apps/web/src
-        - action: rebuild
-          path: ./apps/web/package.json
-        - action: rebuild
-          path: ./pnpm-lock.yaml
 
 volumes:
   pgdata:
   pgadmin_data:
-  api_root_modules:
-  api_modules:
-  web_root_modules:
-  web_modules:

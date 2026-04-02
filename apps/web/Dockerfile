@@ -9,14 +9,6 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web/package.json apps/web/package.json
 RUN pnpm install --frozen-lockfile
 
-# ---- Development ----
-FROM base AS dev
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
-COPY . .
-WORKDIR /app/apps/web
-CMD ["pnpm", "dev", "--turbopack", "--hostname", "0.0.0.0"]
-
 # ---- Build ----
 FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
