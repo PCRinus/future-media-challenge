@@ -114,6 +114,13 @@ export default function RegisterPage() {
             Sign in
           </Link>
         </p>
+
+        <p className="text-center text-sm text-gray-500">
+          Just want to browse?{' '}
+          <Link href="/" className="font-medium text-black hover:underline">
+            View messages
+          </Link>
+        </p>
       </div>
     </div>
   );

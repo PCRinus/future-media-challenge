@@ -15,7 +15,7 @@ export function Header() {
 
   const handleLogout = useCallback(() => {
     logout();
-    router.push('/login');
+    router.push('/');
   }, [logout, router]);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export function Header() {
           Future Media
         </Link>
 
-        {user && (
+        {user ? (
           <div className="relative" ref={menuRef}>
             <Button
               variant="ghost"
@@ -64,6 +64,15 @@ export function Header() {
                 </Button>
               </div>
             )}
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/login">Sign in</Link>
+            </Button>
+            <Button size="sm" asChild>
+              <Link href="/register">Register</Link>
+            </Button>
           </div>
         )}
       </div>

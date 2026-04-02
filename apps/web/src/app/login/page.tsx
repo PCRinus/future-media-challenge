@@ -107,6 +107,13 @@ export default function LoginPage() {
             Sign up
           </Link>
         </p>
+
+        <p className="text-center text-sm text-gray-500">
+          Just want to browse?{' '}
+          <Link href="/" className="font-medium text-black hover:underline">
+            View messages
+          </Link>
+        </p>
       </div>
     </div>
   );

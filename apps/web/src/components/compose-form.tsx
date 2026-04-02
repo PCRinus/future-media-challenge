@@ -18,9 +18,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useAuth } from '@/contexts/auth-context';
 import { getErrorMessage } from '@/lib/get-error-message';
 
 export function ComposeForm() {
+  const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   const [content, setContent] = useState('');
   const [tagId, setTagId] = useState('');
@@ -47,6 +49,21 @@ export function ComposeForm() {
   };
 
   const remaining = 240 - content.length;
+
+  if (!isAuthenticated) {
+    return (
+      <div className="rounded-lg border border-gray-200 bg-white p-4 text-center text-sm text-gray-500 dark:border-gray-800 dark:bg-gray-950">
+        <a href="/login" className="text-blue-600 hover:underline dark:text-blue-400">
+          Sign in
+        </a>{' '}
+        or{' '}
+        <a href="/register" className="text-blue-600 hover:underline dark:text-blue-400">
+          create an account
+        </a>{' '}
+        to post a message.
+      </div>
+    );
+  }
 
   return (
     <form
