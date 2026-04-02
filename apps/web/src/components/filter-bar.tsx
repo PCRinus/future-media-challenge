@@ -6,6 +6,13 @@ import { useTagControllerFindAll } from '@/api/tags/tags';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export interface Filters {
   tagId?: string;
@@ -64,19 +71,22 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
               <Label htmlFor="filter-tag" className="text-xs text-gray-500">
                 Tag
               </Label>
-              <select
-                id="filter-tag"
-                value={filters.tagId ?? ''}
-                onChange={(e) => update({ tagId: e.target.value || undefined })}
-                className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900"
+              <Select
+                value={filters.tagId ?? '__all__'}
+                onValueChange={(v) => update({ tagId: v === '__all__' ? undefined : v })}
               >
-                <option value="">All tags</option>
-                {tags?.map((tag) => (
-                  <option key={tag.id} value={tag.id}>
-                    {tag.name}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger id="filter-tag">
+                  <SelectValue placeholder="All tags" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__all__">All tags</SelectItem>
+                  {tags?.map((tag) => (
+                    <SelectItem key={tag.id} value={tag.id}>
+                      {tag.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex flex-col gap-1">

@@ -10,6 +10,13 @@ import {
 } from '@/api/messages/messages';
 import { useTagControllerFindAll } from '@/api/tags/tags';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { getErrorMessage } from '@/lib/get-error-message';
 
@@ -57,18 +64,18 @@ export function ComposeForm() {
 
       <div className="mt-2 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <select
-            value={tagId}
-            onChange={(e) => setTagId(e.target.value)}
-            className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900"
-          >
-            <option value="">Select a tag</option>
-            {tags?.map((tag) => (
-              <option key={tag.id} value={tag.id}>
-                {tag.name}
-              </option>
-            ))}
-          </select>
+          <Select value={tagId} onValueChange={setTagId}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Select a tag" />
+            </SelectTrigger>
+            <SelectContent>
+              {tags?.map((tag) => (
+                <SelectItem key={tag.id} value={tag.id}>
+                  {tag.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <span className={`text-xs ${remaining < 20 ? 'text-red-500' : 'text-gray-400'}`}>
             {remaining}
           </span>
