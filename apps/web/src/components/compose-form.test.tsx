@@ -97,8 +97,8 @@ describe('ComposeForm', () => {
       const textarea = screen.getByPlaceholderText("What's on your mind?");
       await userEvent.type(textarea, 'Some message');
 
-      const select = screen.getByRole('combobox');
-      await userEvent.selectOptions(select, 'tag-1');
+      await userEvent.click(screen.getByRole('combobox'));
+      await userEvent.click(await screen.findByRole('option', { name: 'General' }));
 
       expect(screen.getByRole('button', { name: 'Post' })).toBeEnabled();
     });
@@ -109,8 +109,8 @@ describe('ComposeForm', () => {
       const textarea = screen.getByPlaceholderText("What's on your mind?");
       await userEvent.type(textarea, '  Hello world  ');
 
-      const select = screen.getByRole('combobox');
-      await userEvent.selectOptions(select, 'tag-2');
+      await userEvent.click(screen.getByRole('combobox'));
+      await userEvent.click(await screen.findByRole('option', { name: 'Tech' }));
 
       await userEvent.click(screen.getByRole('button', { name: 'Post' }));
 
@@ -125,8 +125,8 @@ describe('ComposeForm', () => {
       const textarea = screen.getByPlaceholderText("What's on your mind?");
       await userEvent.type(textarea, '   ');
 
-      const select = screen.getByRole('combobox');
-      await userEvent.selectOptions(select, 'tag-1');
+      await userEvent.click(screen.getByRole('combobox'));
+      await userEvent.click(await screen.findByRole('option', { name: 'General' }));
 
       await userEvent.click(screen.getByRole('button', { name: 'Post' }));
 
